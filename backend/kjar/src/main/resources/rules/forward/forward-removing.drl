@@ -1,0 +1,207 @@
+package cep;
+import  com.ftn.sbnz.model.*;
+import java.util.List;
+import java.util.ArrayList;
+
+
+global List<Plant> matchingPlants;
+
+
+
+rule "Water Needs Low, Maintenance needs low"
+when
+    $plant: Plant(
+        maintenance.getWateringNeeds() != WateringNeeds.LOW ||
+        maintenance.getMaintenanceNeeds() != MaintenanceNeeds.LOW
+        )
+    PlantCareUserForm(
+        availabilityFrequency == PlantCareUserForm.Frequency.ONCE_A_WEEK
+        )
+then
+    delete($plant);
+end
+
+rule "Water Needs low, AVERAGE, Maintenance needs low, average"
+when
+    $plant: Plant(
+        maintenance.getWateringNeeds() == WateringNeeds.HIGH ||
+        maintenance.getMaintenanceNeeds() == MaintenanceNeeds.HIGH)
+    PlantCareUserForm(
+        availabilityFrequency == PlantCareUserForm.Frequency.EVERY_OTHER_DAY
+         || availabilityFrequency == PlantCareUserForm.Frequency.TWICE_A_WEEK
+        )
+then
+    delete($plant);
+end
+
+rule "Water Needs low, average, Maintenance needs low, average, incosistent"
+when
+    $plant: Plant(
+        maintenance.getWateringNeeds() == WateringNeeds.HIGH ||
+        maintenance.getMaintenanceNeeds() == MaintenanceNeeds.HIGH)
+    PlantCareUserForm(
+        availabilityFrequency == PlantCareUserForm.Frequency.DAILY
+         || consistencyLevel == PlantCareUserForm.ConsistencyLevel.INCONSISTENT
+        )
+then
+    delete($plant);
+end
+
+
+rule "Resistance level high resistant"
+when
+    $plant : Plant(maintenance.getResistant() != PlantResistanceLevel.HIGH_RESISTANT)
+    PlantCareUserForm(consistencyLevel == PlantCareUserForm.ConsistencyLevel.INCONSISTENT)
+then
+    delete($plant);
+end
+
+rule "Resistance level high resistant, moderately"
+when
+    $plant : Plant(maintenance.getResistant() == PlantResistanceLevel.SENSITIVE )
+    PlantCareUserForm(consistencyLevel == PlantCareUserForm.ConsistencyLevel.FAIRLY_CONSISTENT)
+then
+    delete($plant);
+end
+
+
+
+rule "Match Sunlight Preferences"
+when
+    $environmentPrefs: EnvironmentPreferences()
+    $plant: Plant($environment: environment)
+    eval ($environmentPrefs.getSunlight().size() != $environment.getSunlight().size()
+    || !($environmentPrefs.getSunlight().containsAll($environment.getSunlight())))
+
+then
+    delete($plant);
+end
+
+//rule "Match Sunlight Preferences"
+ //when
+ //    EnvironmentPreferences($sunlightList:sunlight, sunlight.size()>0)
+ //then
+ //    List<Sunlight> sunlightList = $sunlightList;
+ //    Sunlight[] sunlightArray = sunlightList.toArray(new Sunlight[0]);
+ //    insert(new SunlightChosen(sunlightArray));
+ //end
+//
+//
+//rule "Match Room Preferences humidity < 50"
+//when
+//    EnvironmentPreferences(room == Room.Bedroom || room == Room.LivingRoom ||
+//                            room == Room.Office || room == Room.Other)
+//    $plant: Plant(environment.getHumidity() > 50)
+//then
+//    delete($plant);
+//    System.out.println("Plant: " + $plant.getName());
+//end
+//
+//rule "Match Room Preferences humidity 50-60"
+//when
+//    EnvironmentPreferences(room == Room.Kitchen || room == Room.Bathroom)
+//    $plant: Plant(environment.getHumidity() <= 50)
+//then
+//    delete($plant);
+//    System.out.println("Plant: " + $plant.getName());
+//end
+//
+//rule "Match Room Position Preferences "
+//when
+//    EnvironmentPreferences(position == Position.ByDoor || position == Position.Window)
+//    $plant: Plant(environment.isAirCirculationSensitivity())
+//then
+//   delete($plant);
+//   System.out.println("Plant: " + $plant.getName());
+//end
+
+//
+//declare WateringNeedsChosen
+//	needs: WateringNeeds
+//end
+//
+//declare MaintenanceNeedsChosen
+//	needs: MaintenanceNeeds
+//end
+//
+//declare PlantResistanceLevelChosen
+//    level: PlantResistanceLevel
+//end
+
+
+//rule "Water Needs Low, Maintenance needs low"
+//when
+//    PlantCareUserForm(
+//        availabilityFrequency == PlantCareUserForm.Frequency.ONCE_A_WEEK
+//        )
+//then
+//    insert(new WateringNeedsChosen(WateringNeeds.LOW));
+//    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.LOW));
+//end
+//
+//rule "Water Needs low, AVERAGE, Maintenance needs low, average"
+//when
+//    PlantCareUserForm(
+//        availabilityFrequency == PlantCareUserForm.Frequency.EVERY_OTHER_DAY
+//         || availabilityFrequency == PlantCareUserForm.Frequency.TWICE_A_WEEK
+//        )
+//then
+//    insert(new WateringNeedsChosen(WateringNeeds.LOW));
+//    insert(new WateringNeedsChosen(WateringNeeds.AVERAGE));
+//    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.LOW));
+//    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.AVERAGE));
+//end
+//
+//rule "Water Needs low, average, high, Maintenance needs low, average, high, not incosistent"
+//when
+//    PlantCareUserForm(
+//        availabilityFrequency == PlantCareUserForm.Frequency.DAILY,
+//        consistencyLevel != PlantCareUserForm.ConsistencyLevel.INCONSISTENT
+//        )
+//then
+//    insert(new WateringNeedsChosen(WateringNeeds.LOW));
+//    insert(new WateringNeedsChosen(WateringNeeds.AVERAGE));
+//    insert(new WateringNeedsChosen(WateringNeeds.HIGH));
+//    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.LOW));
+//    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.AVERAGE));
+//    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.HIGH));
+//end
+//
+//rule "Water Needs low, average, Maintenance needs low, average, incosistent"
+//when
+//    PlantCareUserForm(
+//        availabilityFrequency == PlantCareUserForm.Frequency.DAILY,
+//        consistencyLevel == PlantCareUserForm.ConsistencyLevel.INCONSISTENT
+//        )
+//then
+//    insert(new WateringNeedsChosen(WateringNeeds.LOW));
+//    insert(new WateringNeedsChosen(WateringNeeds.AVERAGE));
+//    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.LOW));
+//    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.AVERAGE));
+//end
+//
+//
+//rule "Resistance level high resistant"
+//when
+//    PlantCareUserForm(consistencyLevel == PlantCareUserForm.ConsistencyLevel.INCONSISTENT)
+//
+//then
+//    insert(new PlantResistanceLevelChosen(PlantResistanceLevel.HIGH_RESISTANT));
+//end
+//
+//rule "Resistance level high resistant, moderately"
+//when
+//    PlantCareUserForm(consistencyLevel == PlantCareUserForm.ConsistencyLevel.FAIRLY_CONSISTENT)
+//then
+//    insert(new PlantResistanceLevelChosen(PlantResistanceLevel.HIGH_RESISTANT));
+//    insert(new PlantResistanceLevelChosen(PlantResistanceLevel.MODERATELY_RESISTANT));
+//end
+//
+//rule "Resistance level high resistant, moderately, high"
+//when
+//    PlantCareUserForm(consistencyLevel == PlantCareUserForm.ConsistencyLevel.VERY_CONSISTENT)
+//then
+//    insert(new PlantResistanceLevelChosen(PlantResistanceLevel.HIGH_RESISTANT));
+//    insert(new PlantResistanceLevelChosen(PlantResistanceLevel.MODERATELY_RESISTANT));
+//    insert(new PlantResistanceLevelChosen(PlantResistanceLevel.HIGH_RESISTANT));
+//end
