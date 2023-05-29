@@ -1,0 +1,246 @@
+package forward;
+import  com.ftn.sbnz.model.enums.*;
+import  com.ftn.sbnz.model.plant.*;
+import  com.ftn.sbnz.model.user.*;
+import  com.ftn.sbnz.model.drools.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
+
+import accumulate com.ftn.sbnz.drools.customFunc.SumPointsForPlant sumForPlant;
+
+global HashMap<String, PlantRecom> recommendedPlants;
+
+declare SizePoints
+    point: Number
+    plant: Plant
+end
+
+declare HumidityChosen
+    humidityMin:Double
+    humidityMax:Double
+end
+
+declare AirCirculationChosen
+    highCirculation:Boolean
+end
+
+function double calculatePoints(double plantHumidity, double humidityMin, double humidityMax) {
+    double distance = 0;
+    double maxDistance = humidityMax - humidityMin;
+    double maxPoints = 100; // Adjust as needed
+    double percentage;
+
+    if (plantHumidity < humidityMin) {
+        distance = humidityMin - plantHumidity;
+    } else if (plantHumidity > humidityMax) {
+        distance = plantHumidity - humidityMax;
+    }
+
+    percentage = distance / maxDistance;
+    return (double) Math.round((maxPoints - percentage) / maxPoints);
+}
+
+
+
+rule "Match Room Preferences humidity < 50"
+no-loop
+salience 15
+when
+    EnvironmentPreferences(room == EnvironmentPreferences.Room.Bedroom || room == EnvironmentPreferences.Room.LivingRoom ||
+                            room == EnvironmentPreferences.Room.Office || room == EnvironmentPreferences.Room.Other)
+then
+    insert(new HumidityChosen(0.0,50.0));
+end
+
+rule "Match Room Preferences humidity 50-60"
+no-loop
+salience 15
+when
+    EnvironmentPreferences(room == EnvironmentPreferences.Room.Kitchen || room == EnvironmentPreferences.Room.Bathroom)
+then
+    insert(new HumidityChosen(51.0,60.0));
+end
+
+rule "Humidity Points 1"
+no-loop
+salience 10
+when
+    FittingPlant($plant: plant, $humidity:plant.getEnvironment().getHumidity())
+    HumidityChosen($humidityMin:humidityMin, $humidityMax:humidityMax)
+then
+//        insert(new RecommendationPoints(calculatePoints($humidity, $humidityMin, $humidityMax) * 10, $plant));
+    double points = calculatePoints($humidity, $humidityMin, $humidityMax) * 10.;
+    insert(new RecommendationPoints(points, $plant));
+    System.out.println("Points: " + points);
+end                                  //vrednosti od 0-1 * 10
+
+
+rule "Match Room Position Door or window "
+no-loop
+salience 15
+when
+    EnvironmentPreferences(position == Position.ByDoor || position == Position.Window)
+then
+   insert(new AirCirculationChosen(true));
+end
+
+rule "Match Room Position not important"
+no-loop
+salience 15
+when
+    EnvironmentPreferences(position != Position.ByDoor && position != Position.Window)
+then
+   insert(new AirCirculationChosen(false));
+end
+
+
+rule "position points 1"
+no-loop
+salience 10
+when
+    FittingPlant($plant: plant, plant.getEnvironment().isAirCirculationSensitivity() == true)
+    AirCirculationChosen(highCirculation == true)
+then
+   insert(new RecommendationPoints(-10., $plant));
+   System.out.println("Points: " + -10.);
+end
+
+
+rule "position points 2"
+salience 10
+when
+    FittingPlant($plant: plant)
+    $air: AirCirculationChosen()
+    eval(!($plant.getEnvironment().isAirCirculationSensitivity() == true && $air.getHighCirculation() ==true))
+then
+   insert(new RecommendationPoints(10., $plant));
+   System.out.println("Points: " + 10.);
+end
+
+
+rule "Flower Color Points"
+no-loop
+salience 15
+when
+    FittingPlant($plant: plant, $plantColors: plant.getDescription().getColor())
+    LookPreferences($colors: color)
+    $matchingColorCount: Number() from accumulate(
+            $color: String() from $colors,
+            count($plantColors.contains($color))
+        )
+then
+    insert(new RecommendationPoints($matchingColorCount.intValue() * 10.0, $plant));
+    System.out.println("Points: " + $matchingColorCount.intValue() * 10.0);
+end
+
+
+rule "Flower Size Points each"
+no-loop
+salience 15
+when
+    FittingPlant($plant: plant,
+                    $plantWMin: plant.getDescription().getAveragesSize().getWidthMin(),
+                    $plantWMax: plant.getDescription().getAveragesSize().getWidthMax(),
+                    $plantHMin: plant.getDescription().getAveragesSize().getHeightMin(),
+                    $plantHMax: plant.getDescription().getAveragesSize().getHeightMax())
+    LookPreferences($sizeWMin: size.getWidthMin(),
+                    $sizeWMax: size.getWidthMax(),
+                    $sizeHMin: size.getHeightMin(),
+                    $sizeHMax: size.getHeightMax())
+then
+    insert(new SizePoints(calculatePoints($sizeWMin, $plantWMin, $plantWMax)*10., $plant));
+    insert(new SizePoints(calculatePoints($sizeWMax, $plantWMin, $plantWMax)*10., $plant));
+    insert(new SizePoints(calculatePoints($sizeHMin, $plantHMin, $plantHMax)*10., $plant));
+    insert(new SizePoints(calculatePoints($sizeHMax, $plantHMin, $plantHMax)*10., $plant));
+    System.out.println("Points: " +calculatePoints($sizeWMin, $plantWMin, $plantWMax)*10.);
+    System.out.println("Points: " +calculatePoints($sizeWMax, $plantWMin, $plantWMax)*10.);
+    System.out.println("Points: " +calculatePoints($sizeHMin, $plantHMin, $plantHMax)*10.);
+    System.out.println("Points: " +calculatePoints($sizeHMax, $plantHMin, $plantHMax)*10.);
+end
+
+rule "Flower Size Points average"
+no-loop
+salience 10
+when
+    FittingPlant($plant: plant)
+    $average: Number() from accumulate(
+            SizePoints($points: point, plant.getName() == $plant.getName()),
+            average($points)
+
+        )
+then
+    insert(new RecommendationPoints($average.doubleValue(), $plant));
+    System.out.println("Points: " +$average);
+end
+
+
+
+rule "Flower Season Points"
+no-loop
+salience 15
+when
+    FittingPlant($plant: plant,$plantSeason: plant.getDescription().getSeasons())
+    LookPreferences($season: seasons)
+    $matchingColorCount: Number() from accumulate(
+            $seasons: String() from $season,
+            count($plantSeason.contains($seasons))
+        )
+then
+    insert(new RecommendationPoints($matchingColorCount.intValue() * 10., $plant));
+    System.out.println("Points: " +$matchingColorCount.doubleValue()*10);
+end
+
+rule "Plant Type Points"
+no-loop
+salience 15
+when
+     FittingPlant($plant: plant,$type: plant.getDescription().getPlantType())
+    LookPreferences(plantType == $type)
+then
+    insert(new RecommendationPoints(10., $plant));
+
+    System.out.println("Points: "  + 10.);
+end
+
+
+rule "Flower Points"
+no-loop
+salience 15
+when
+    FittingPlant($plant: plant,plant.getDescription().getFlower().hasFlowers &&
+        plant.getDescription().getFlower().getFloweringSeason().size() > 0,
+        $plantSeason:plant.getDescription().getFlower().getFloweringSeason()
+    )
+    LookPreferences(flower.hasFlowers && flower.getFloweringSeason().size() > 0, $season:flower.getFloweringSeason())
+    $matchingColorCount: Number() from accumulate(
+                $seasons: String() from $season,
+                count($plantSeason.contains($seasons))
+            )
+then
+    insert(new RecommendationPoints(10.*$matchingColorCount.intValue(), $plant));
+
+    System.out.println("Points: " +$matchingColorCount.doubleValue()*10);
+end
+
+
+
+rule "Calculate Total Points per Plant"
+salience 0
+when
+    $recommendedPlants: HashMap(this != null) from recommendedPlants
+    FittingPlant($plant: plant)
+    accumulate($rec: RecommendationPoints(),$total: sumForPlant($rec))
+    Number($avg : doubleValue) from accumulate(
+                                $points: Double() from $total.values(),
+                            	average($points) );
+    $point : Double() from $total.get($plant.getName())
+    eval($point >= $avg)
+then
+    modify(recommendedPlants){put($plant.getName(), new PlantRec($plant,$point))}
+    System.out.println("----------" + $total + "---------");
+    System.out.println("----------" + $avg + "---------");
+    System.out.println("----------" + $total.get($plant.getName()) + "--- "  +$plant.getName()+"------");
+end

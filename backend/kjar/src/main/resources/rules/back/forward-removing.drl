@@ -1,0 +1,143 @@
+package forward;
+import  com.ftn.sbnz.model.enums.*;
+import  com.ftn.sbnz.model.plant.*;
+import  com.ftn.sbnz.model.user.*;
+import java.util.List;
+import java.util.ArrayList;
+
+declare FittingPlant
+    plant: Plant
+end
+
+declare WateringNeedsChosen
+	needs: WateringNeeds
+end
+
+declare MaintenanceNeedsChosen
+	needs: MaintenanceNeeds
+end
+
+declare PlantResistanceLevelChosen
+    level: PlantResistanceLevel
+end
+
+declare SunlightChosen
+    sunlight: Sunlight[]
+end
+
+rule "Water Needs Low, Maintenance needs low"
+salience 30
+when
+    PlantCareUserForm(
+        availabilityFrequency == PlantCareUserForm.Frequency.ONCE_A_WEEK
+        )
+then
+    insert(new WateringNeedsChosen(WateringNeeds.LOW));
+    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.LOW));
+end
+
+rule "Water Needs low, AVERAGE, Maintenance needs low, average"
+salience 30
+when
+    PlantCareUserForm(
+        availabilityFrequency == PlantCareUserForm.Frequency.EVERY_OTHER_DAY
+         || availabilityFrequency == PlantCareUserForm.Frequency.TWICE_A_WEEK
+        )
+then
+    insert(new WateringNeedsChosen(WateringNeeds.LOW));
+    insert(new WateringNeedsChosen(WateringNeeds.AVERAGE));
+    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.LOW));
+    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.AVERAGE));
+end
+
+rule "Water Needs low, average, high, Maintenance needs low, average, high, not incosistent"
+salience 30
+when
+    PlantCareUserForm(
+        availabilityFrequency == PlantCareUserForm.Frequency.DAILY,
+        consistencyLevel != PlantCareUserForm.ConsistencyLevel.INCONSISTENT
+        )
+then
+    insert(new WateringNeedsChosen(WateringNeeds.LOW));
+    insert(new WateringNeedsChosen(WateringNeeds.AVERAGE));
+    insert(new WateringNeedsChosen(WateringNeeds.HIGH));
+    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.LOW));
+    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.AVERAGE));
+    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.HIGH));
+end
+
+rule "Water Needs low, average, Maintenance needs low, average, incosistent"
+salience 30
+when
+    PlantCareUserForm(
+        availabilityFrequency == PlantCareUserForm.Frequency.DAILY,
+        consistencyLevel == PlantCareUserForm.ConsistencyLevel.INCONSISTENT
+        )
+then
+    insert(new WateringNeedsChosen(WateringNeeds.LOW));
+    insert(new WateringNeedsChosen(WateringNeeds.AVERAGE));
+    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.LOW));
+    insert(new MaintenanceNeedsChosen(MaintenanceNeeds.AVERAGE));
+end
+
+rule "Resistance level high resistant"
+salience 30
+when
+    PlantCareUserForm(consistencyLevel == PlantCareUserForm.ConsistencyLevel.INCONSISTENT)
+
+then
+    insert(new PlantResistanceLevelChosen(PlantResistanceLevel.HIGH_RESISTANT));
+end
+
+rule "Resistance level high resistant, moderately"
+salience 30
+when
+    PlantCareUserForm(consistencyLevel == PlantCareUserForm.ConsistencyLevel.FAIRLY_CONSISTENT)
+then
+    insert(new PlantResistanceLevelChosen(PlantResistanceLevel.HIGH_RESISTANT));
+    insert(new PlantResistanceLevelChosen(PlantResistanceLevel.MODERATELY_RESISTANT));
+end
+
+rule "Resistance level high resistant, moderately, high"
+salience 30
+when
+    PlantCareUserForm(consistencyLevel == PlantCareUserForm.ConsistencyLevel.VERY_CONSISTENT)
+then
+    insert(new PlantResistanceLevelChosen(PlantResistanceLevel.HIGH_RESISTANT));
+    insert(new PlantResistanceLevelChosen(PlantResistanceLevel.MODERATELY_RESISTANT));
+    insert(new PlantResistanceLevelChosen(PlantResistanceLevel.HIGH_RESISTANT));
+end
+
+rule "Match Sunlight Preferences"
+ salience 30
+when
+     EnvironmentPreferences($sunlightList:sunlight, sunlight.size()>0)
+ then
+     List<Sunlight> sunlightList = $sunlightList;
+     Sunlight[] sunlightArray = sunlightList.toArray(new Sunlight[0]);
+     insert(new SunlightChosen(sunlightArray));
+ end
+
+
+rule "Collect All"
+salience 20
+when
+    SunlightChosen($sunlight:sunlight)
+    $plant: Plant()
+    Number(intValue >= 1) from accumulate(
+        $w:WateringNeedsChosen(needs == $plant.getMaintenance().getWateringNeeds()),
+        count($w)
+    )
+    Number(intValue >= 1) from accumulate(
+        $w:MaintenanceNeedsChosen(needs == $plant.getMaintenance().getMaintenanceNeeds()),
+        count($w)
+    )
+    Number(intValue >= 1) from accumulate(
+        $w:PlantResistanceLevelChosen(level == $plant.getMaintenance().getResistant()),
+        count($w)
+    )
+    eval($plant.getEnvironment().getSunlight().containsAll(Arrays.asList($sunlight)))
+then
+    System.out.println("Plant: " + $plant.getName());
+    insert(new FittingPlant($plant));
+end

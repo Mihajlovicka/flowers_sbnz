@@ -1,0 +1,63 @@
+package cep;
+import  com.ftn.sbnz.model.enums.*;
+import  com.ftn.sbnz.model.plant.*;
+import  com.ftn.sbnz.model.user.*;
+import  com.ftn.sbnz.model.disease.*;
+import java.util.List;
+import java.util.ArrayList;
+
+query plantsForDiseases(String disease, String plant)
+    Disease(disease, plant;)
+end
+
+query causesForSymptom(String cause, String symptom)
+    Cause(cause, symptom;)
+end
+
+query treatmentForSymptom(String treatment, String symptom)
+    Treatment(treatment, symptom;)
+end
+
+query diseasesForSymptom(String symptom, String disease)
+     Symptom(symptom, disease;)
+end
+
+query treatmentForDisease(String treatment, String disease)
+    treatmentForSymptom(treatment, symptom;) and diseasesForSymptom(symptom, disease;)
+end
+
+query symptomForPlants(String symptom, String plant)
+     diseasesForSymptom(symptom, disease;) and plantsForDiseases(disease, plant;)
+end
+
+query plantAndCauses(String cause, String plant)
+    causesForSymptom(cause,symptom;) and symptomForPlants(symptom,plant;)
+end
+
+query plantDiseaseTreatmans(String plant, String disease, String treatment)
+    plantsForDiseases(disease, plant;) and treatmentForDisease(treatment, disease;)
+end
+
+rule "symptoms of"
+when
+    String( this == "symptoms of" )
+    symptomForPlants(thing1, thing2;)
+then
+    System.out.println( "simptomi: " + thing1 + " biljke: " + thing2);
+end
+
+rule "plant And Causes"
+when
+    String( this == "plantAndCauses" )
+    plantAndCauses(thing1, thing2;)
+then
+    System.out.println( "cause: " + thing1 + " plant: " + thing2);
+end
+
+rule "plant disease treatman"
+when
+    String( this == "plant disease treatman" )
+    plantDiseaseTreatmans(thing1, thing2, thing3;)
+then
+    System.out.println( "plant: " + thing1 + " disease: " + thing2 + " threatmant: " + thing3);
+end

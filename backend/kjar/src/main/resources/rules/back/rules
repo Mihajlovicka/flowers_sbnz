@@ -1,0 +1,116 @@
+
+
+//
+//
+//rule "Match Room Preferences humidity < 50"
+//when
+//    EnvironmentPreferences(room == Room.Bedroom || room == Room.LivingRoom ||
+//                            room == Room.Office || room == Room.Other)
+//    $plant: Plant(environment.getHumidity() > 50)
+//then
+//    delete($plant);
+//    System.out.println("Plant: " + $plant.getName());
+//end
+//
+//rule "Match Room Preferences humidity 50-60"
+//when
+//    EnvironmentPreferences(room == Room.Kitchen || room == Room.Bathroom)
+//    $plant: Plant(environment.getHumidity() <= 50)
+//then
+//    delete($plant);
+//    System.out.println("Plant: " + $plant.getName());
+//end
+//
+//rule "Match Room Position Preferences "
+//when
+//    EnvironmentPreferences(position == Position.ByDoor || position == Position.Window)
+//    $plant: Plant(environment.isAirCirculationSensitivity())
+//then
+//   delete($plant);
+//   System.out.println("Plant: " + $plant.getName());
+//end
+
+//
+
+
+
+//
+//
+
+
+
+//rule "Water Needs Low, Maintenance needs low"
+//salience 20
+//when
+//    $plant: Plant(
+//        maintenance.getWateringNeeds() != WateringNeeds.LOW ||
+//        maintenance.getMaintenanceNeeds() != MaintenanceNeeds.LOW
+//        )
+//    PlantCareUserForm(
+//        availabilityFrequency == PlantCareUserForm.Frequency.ONCE_A_WEEK
+//        )
+//then
+//    delete($plant);
+//end
+//
+//rule "Water Needs low, AVERAGE, Maintenance needs low, average"
+//salience 20
+//when
+//    $plant: Plant(
+//        maintenance.getWateringNeeds() == WateringNeeds.HIGH ||
+//        maintenance.getMaintenanceNeeds() == MaintenanceNeeds.HIGH)
+//    PlantCareUserForm(
+//        availabilityFrequency == PlantCareUserForm.Frequency.EVERY_OTHER_DAY
+//         || availabilityFrequency == PlantCareUserForm.Frequency.TWICE_A_WEEK
+//        )
+//then
+//    delete($plant);
+//end
+//
+//rule "Water Needs low, average, Maintenance needs low, average, incosistent"
+//salience 20
+//when
+//    $plant: Plant(
+//        maintenance.getWateringNeeds() == WateringNeeds.HIGH ||
+//        maintenance.getMaintenanceNeeds() == MaintenanceNeeds.HIGH)
+//    PlantCareUserForm(
+//        availabilityFrequency == PlantCareUserForm.Frequency.DAILY
+//         || consistencyLevel == PlantCareUserForm.ConsistencyLevel.INCONSISTENT
+//        )
+//then
+//    delete($plant);
+//end
+//
+//
+//rule "Resistance level high resistant"
+//salience 20
+//when
+//    $plant : Plant(maintenance.getResistant() != PlantResistanceLevel.HIGH_RESISTANT)
+//    PlantCareUserForm(consistencyLevel == PlantCareUserForm.ConsistencyLevel.INCONSISTENT)
+//then
+//    delete($plant);
+//end
+//
+//rule "Resistance level high resistant, moderately"
+//when
+//    $plant : Plant(maintenance.getResistant() == PlantResistanceLevel.SENSITIVE )
+//    PlantCareUserForm(consistencyLevel == PlantCareUserForm.ConsistencyLevel.FAIRLY_CONSISTENT)
+//then
+//    delete($plant);
+//end
+//
+//
+//
+//rule "Match Sunlight Preferences"
+//salience 20
+//when
+//    $environmentPrefs: EnvironmentPreferences()
+//    $plant: Plant($environment: environment)
+//    eval ($environmentPrefs.getSunlight().size() != $environment.getSunlight().size()
+//    || !($environmentPrefs.getSunlight().containsAll($environment.getSunlight())))
+//
+//then
+//    delete($plant);
+//end
+//
+
