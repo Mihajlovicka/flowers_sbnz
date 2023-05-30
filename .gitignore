@@ -1,0 +1,10 @@
+**/mvnw/**
+**/mvnw
+**/.mvn/wrapper/**
+**/.idea/**
+**/HELP.md
+**/.mvn/wrapper/maven-wrapper.jar
+**/**.iml
+**/mvnw.cmd
+**/.vscode/**
+**/.mvn/**

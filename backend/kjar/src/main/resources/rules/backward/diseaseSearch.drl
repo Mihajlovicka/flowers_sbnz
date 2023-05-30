@@ -1,0 +1,131 @@
+package forward;
+import  com.ftn.sbnz.model.enums.*;
+import  com.ftn.sbnz.model.plant.*;
+import  com.ftn.sbnz.model.user.*;
+import  com.ftn.sbnz.model.disease.*;
+import java.util.List;
+import java.util.ArrayList;
+
+declare PossibleDisease
+    disease:String;
+    symptomCount:Integer;
+end
+
+
+
+query treatmentForDisease(String treatment, String disease)
+    treatmentForSymptom(treatment, symptom;) and diseasesForSymptom(symptom, disease;)
+end
+
+query plantAndCauses(String cause, String plant)
+    causesForSymptom(cause,symptom;) and symptomForPlants(symptom,plant;)
+end
+
+
+
+
+
+//
+
+query causesForSymptom(String cause, String symptom)
+    Cause(cause, symptom;)
+end
+
+query treatmentForSymptom(String treatment, String symptom)
+    Treatment(treatment, symptom;)
+end
+
+query plantSymptomCauseAndTreatman(String symptom, String cause, String treatment)
+    causesForSymptom(cause, symptom;) and treatmentForSymptom(treatment, symptom;)
+end
+//
+query diseasesForSymptom(String symptom, String disease)
+     Symptom(symptom, disease;)
+end
+
+query plantsForDiseases(String disease, String plant)
+    Disease(disease, plant;)
+end
+
+query symptomForPlants(String symptom, String plant, String $d)
+     diseasesForSymptom(symptom, $d;) and
+     plantsForDiseases($d, plant;)
+end
+//
+rule "1 - Find possible diseases"
+salience 20
+when
+    $symptom: String()
+    $plant: PlantName()
+    symptomForPlants($symptom, $plant.getName(), $d;)
+then
+    System.out.println( "biljka: " + $plant.getName() + " bolest: " +$d + " simptom " +$symptom);
+    insert(new PossibleDisease($d,0));
+end
+
+rule "middle"
+salience 15
+when
+    $d1 : PossibleDisease()
+    $d2 : PossibleDisease(this != $d1, disease == $d1.disease)
+then
+    retract($d2)
+end
+
+rule "2 - Count symptoms for diseases"
+salience 10
+when
+    $disease: PossibleDisease()
+    $symptoms: List() from collect(String())
+    Number($num: intValue >= 0) from accumulate(
+        $s: Symptom(symptom memberOf $symptoms, disease == $disease.getDisease()),
+        count($s)
+    )
+then
+    modify($disease) {
+        setSymptomCount($num)
+    };
+    System.out.println("Possible disease: " + $disease + " sumptoms: " + $num);
+end
+
+rule "3 - Select disease with the most symptoms"
+salience 0
+when
+    $disease: PossibleDisease()
+    not PossibleDisease(symptomCount > $disease.getSymptomCount(), this != $disease)
+then
+    System.out.println("Selected disease: " + $disease.getDisease() + " symptoms counted: "  + $disease.getSymptomCount());
+end
+
+
+rule "4- symptom-cause"
+salience -10
+when
+    $disease: PossibleDisease()
+    not PossibleDisease(symptomCount > $disease.getSymptomCount(), this != $disease)
+    $symptomS: List() from collect(String())
+    $collectedSymptoms: List() from accumulate(
+        Symptom($s: symptom, disease == $disease.getDisease(), $s memberOf $symptomS),
+                collectList($s)
+    )
+    $symptom: String() from $collectedSymptoms
+    causesForSymptom(cause, $symptom;)
+then
+    System.out.println("Symptom: " + $symptom + " \ncause: "  + cause );
+end
+
+rule "4- symptom-treatment"
+salience -10
+when
+    $disease: PossibleDisease()
+    not PossibleDisease(symptomCount > $disease.getSymptomCount(), this != $disease)
+    $symptomS: List() from collect(String())
+    $collectedSymptoms: List() from accumulate(
+        Symptom($s: symptom, disease == $disease.getDisease(), $s memberOf $symptomS),
+                collectList($s)
+    )
+    $symptom: String() from $collectedSymptoms
+    treatmentForSymptom(treatment, $symptom;)
+then
+    System.out.println("Symptom: " + $symptom + " \ntreatmant: "  + treatment );
+end
