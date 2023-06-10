@@ -3,6 +3,7 @@ package com.ftn.sbnz.drools.customFunc;
 import com.ftn.sbnz.model.drools.CompMaitPlantO;
 import com.ftn.sbnz.model.drools.PlantRec;
 import com.ftn.sbnz.model.drools.RecommendationPoints;
+import com.ftn.sbnz.model.enums.Color;
 import com.ftn.sbnz.model.plant.Plant;
 import org.mvel2.util.Make;
 
@@ -54,8 +55,8 @@ public class CompMaitPlant implements org.kie.api.runtime.rule.AccumulateFunctio
             d+=1;
         if(plantRec.getMaintenance().getResistant().equals(plant.getMaintenance().getResistant()))
             d+=1;
-        for (String c : plantRec.getDescription().getColor()) {
-            if (plant.getDescription().getColor().stream().anyMatch(c1 -> c.equals(c1))) {
+        for (Color c : plantRec.getDescription().getColor()) {
+            if (plant.getDescription().getColor().stream().anyMatch(c1 -> c.name().equals(c1.name()))) {
                 d += 1;
             }
         }

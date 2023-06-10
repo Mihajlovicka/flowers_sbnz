@@ -1,0 +1,218 @@
+<div class="centered-container">
+  <div class="login-form">
+
+
+    <form *ngIf="isFirstFormVisible">
+
+      <h2 class="form-title">Biljka</h2>
+      <div class="form-part">
+        <mat-form-field appearance="fill">
+          <mat-label>Ime</mat-label>
+          <input matInput type="text" [(ngModel)]="plant.name" name="name" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Slika</mat-label>
+          <input matInput type="text" [(ngModel)]="plant.description.picture" name="picture">
+        </mat-form-field>
+        <div class="button-container">
+          <button mat-raised-button type="submit" (click)="showSecondForm()">Dalje</button>
+        </div>
+      </div>
+    </form>
+
+    <form *ngIf="isSecondFormVisible">
+      <h2 class="form-title">Okolina</h2>
+      <div class="form-part">
+        <mat-form-field appearance="fill">
+          <mat-label>Vlaznost vazduha</mat-label>
+          <input matInput type="number" [(ngModel)]="plant.environment.humidity" name="humidity" required>
+        </mat-form-field>
+
+        <div class="checkbox-container">
+          <mat-checkbox [(ngModel)]="plant.environment.airCirculationSensitivity" name="sensitivity">Da li je biljka
+            osetljiva na strujanje vazduha
+          </mat-checkbox>
+        </div>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Minimalna temperatura</mat-label>
+          <input matInput type="number" [(ngModel)]="plant.environment.temperatureMin" name="minTemp" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Maksimalna temperatura</mat-label>
+          <input matInput type="number" [(ngModel)]="plant.environment.temperatureMax" name="maxTemp" required>
+        </mat-form-field>
+      </div>
+      <div class="form-part">
+        <mat-form-field appearance="fill">
+          <mat-label>Nacin sirenja biljke</mat-label>
+          <mat-select [(ngModel)]="plant.environment.spaceNeed" name="spaceNeed" required>
+            <mat-option *ngFor="let space of spaces" [value]="getSpaceNeedEnumValue(space)">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="fill">
+          <mat-label>Potrebne hranjive materije</mat-label>
+          <mat-select [(ngModel)]="plant.environment.nutrientType" name="nutrientType" required multiple>
+            <mat-option *ngFor="let nutrientType of nutrients"
+                        [value]="getNutrientTypeEnumValue(nutrientType)">{{ nutrientType }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Sunceva svetlost</mat-label>
+          <mat-select [(ngModel)]="plant.environment.sunlight" name="sunlight" required multiple>
+            <mat-option *ngFor="let sunlight of sunlights"
+                        [value]="getSunlightEnumValue(sunlight)">{{ sunlight }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+
+        <div class="button-container">
+          <button mat-raised-button type="submit" (click)="showThirdForm()">Dalje</button>
+        </div>
+      </div>
+    </form>
+
+    <form *ngIf="isThirdFormVisible">
+      <h2 class="form-title">Odrzavanje</h2>
+      <div class="form-part">
+        <mat-form-field appearance="fill">
+          <mat-label>Zalivanje</mat-label>
+          <mat-select [(ngModel)]="plant.maintenance.wateringNeeds" name="wateringNeeds" required>
+            <mat-option *ngFor="let space of waterings"
+                        [value]="getWateringNeedsEnumValue(space)">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Ukupna kolicina odrzavanja</mat-label>
+          <mat-select [(ngModel)]="plant.maintenance.maintenanceNeeds" name="maintenanceNeeds" required>
+            <mat-option *ngFor="let space of maintenances"
+                        [value]="getMaintenaceNeedsEnumValue(space)">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Otpornost</mat-label>
+          <mat-select [(ngModel)]="plant.maintenance.resistant" name="resistant" required>
+            <mat-option *ngFor="let space of resistants"
+                        [value]="getResistantNeedsEnumValue(space)">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-part">
+        <mat-form-field appearance="fill">
+          <mat-label>Obrezivanje</mat-label>
+          <input matInput type="text" [(ngModel)]="plant.maintenance.pruning" name="pruning">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Djubrenje</mat-label>
+          <input matInput type="text" [(ngModel)]="plant.maintenance.fertilization" name="fertilization">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Presadjivanje</mat-label>
+          <input matInput type="text" [(ngModel)]="plant.maintenance.plantTransplant" name="plantTransplant">
+        </mat-form-field>
+
+
+        <div class="button-container">
+          <button mat-raised-button type="submit" (click)="showFourthForm()">Dalje</button>
+        </div>
+      </div>
+    </form>
+
+    <form *ngIf="isFourthFormVisible">
+      <h2 class="form-title">Izgled</h2>
+      <div class="form-part">
+        <mat-form-field appearance="fill">
+          <mat-label>Vrsta biljke</mat-label>
+          <mat-select [(ngModel)]="plant.description.plantType" name="plantType" required>
+            <mat-option *ngFor="let space of plantTypes"
+                        [value]="getPlantTypeEnumValue(space)">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Sezona</mat-label>
+          <mat-select [(ngModel)]="plant.description.seasons" name="seasons" required multiple>
+            <mat-option *ngFor="let space of seasons"
+                        [value]="getSeasonsEnumValue(space)">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Minimalna sirina</mat-label>
+          <input matInput type="number" [(ngModel)]="plant.description.averagesSize.widthMin" name="widthMin" required>
+        </mat-form-field>
+      </div>
+      <div class="form-part">
+        <mat-form-field appearance="fill">
+          <mat-label>Maksimalna sirina</mat-label>
+          <input matInput type="number" [(ngModel)]="plant.description.averagesSize.widthMax" name="widthMax" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Minimalna visina</mat-label>
+          <input matInput type="number" [(ngModel)]="plant.description.averagesSize.heightMin" name="heightMin" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Maksimalna visina</mat-label>
+          <input matInput type="number" [(ngModel)]="plant.description.averagesSize.heightMax" name="heightMax" required>
+        </mat-form-field>
+
+
+        <div class="button-container">
+          <button mat-raised-button type="submit" (click)="showFifthForm()">Dalje</button>
+        </div>
+      </div>
+    </form>
+
+    <form *ngIf="isFifthFormVisible">
+      <h2 class="form-title">Cvet</h2>
+      <div class="form-part">
+        <mat-form-field appearance="fill">
+          <mat-label>Boja</mat-label>
+          <mat-select [(ngModel)]="plant.description.color" name="color" multiple>
+            <mat-option *ngFor="let space of colors" [value]="space">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="fill">
+          <mat-label>Sezona</mat-label>
+          <mat-select [(ngModel)]="plant.description.seasons" name="seasons" multiple>
+            <mat-option *ngFor="let space of seasons"
+                        [value]="getSeasonsEnumValue(space)">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+
+        <div class="checkbox-container">
+          <mat-checkbox [(ngModel)]="plant.description.flower.hasFlowers" name="hasFlowers">
+            Da li biljka cveta
+          </mat-checkbox>
+        </div>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Kada biljka cveta</mat-label>
+          <mat-select [(ngModel)]="plant.description.flower.floweringSeason" name="floweringSeason" multiple>
+            <mat-option *ngFor="let space of seasons"
+                        [value]="getSeasonsEnumValue(space)">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+
+        <div class="button-container">
+          <button mat-raised-button type="submit" (click)="onSubmit()">Dalje</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

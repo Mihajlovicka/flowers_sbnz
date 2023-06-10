@@ -1,0 +1,27 @@
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-form {
+  max-width: 300px;
+  width: 100%;
+  padding: 1rem;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+mat-form-field{
+  display: flex;
+}

@@ -7,9 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Embeddable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Embeddable
 public class Maintenance {
     private int wateringFrequency;//per week
     private String wateringAmount;

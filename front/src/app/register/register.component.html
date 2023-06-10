@@ -1,0 +1,59 @@
+<div class="centered-container">
+  <div class="login-form">
+
+    <form *ngIf="isFirstFormVisible">
+      <h2 class="form-title">Registracija</h2>
+      <mat-form-field appearance="fill">
+        <mat-label>Ime</mat-label>
+        <input matInput type="text" [(ngModel)]="user.name" name="name" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Prezime</mat-label>
+        <input matInput type="text" [(ngModel)]="user.surname" name="surname" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput type="text" [(ngModel)]="user.email" name="email" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Sifra</mat-label>
+        <input matInput type="password" [(ngModel)]="user.password" name="password" required>
+      </mat-form-field>
+      <div class="button-container">
+        <button mat-raised-button (click)="showSecondForm()">Dalje</button>
+      </div>
+    </form>
+
+    <form *ngIf="isSecondFormVisible">
+      <h2 class="form-title">Nesto o sebi</h2>
+      <mat-form-field appearance="fill">
+        <mat-label>Oceni svoj nivo poznavanja biljaka</mat-label>
+        <mat-select [(ngModel)]="user.plantCareUserForm.userLevel" name="level" required>
+          <mat-option *ngFor="let level of levels" [value]="getUserLevelEnumValue(level)">{{ level }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Koliko cesto nedeljno imas vremena</mat-label>
+        <mat-select [(ngModel)]="user.plantCareUserForm.availabilityFrequency" name="frequency" required>
+          <mat-option *ngFor="let days of frequencies" [value]="getFrequencyEnumValue(days)">{{ days }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Koliko si konzistentan pri brizi cveca</mat-label>
+        <mat-select [(ngModel)]="user.plantCareUserForm.consistencyLevel" name="consistency" required>
+          <mat-option *ngFor="let consistency of consistencies"
+                      [value]="getConsistencyEnumValue(consistency)">{{ consistency }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="button-container">
+        <button mat-raised-button type="submit" (click)="onSubmit()">Registruj se</button>
+      </div>
+    </form>
+
+  </div>
+</div>
