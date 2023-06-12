@@ -57,9 +57,11 @@ export class NewFlowerComponent {
   }
 
   onSubmit() {
-    this.service.new(this.plant).subscribe((res)=>{
-      alert("Uspesno dodata.")
-      // this.router.navigate(['/flowers']);
+    this.service.new(this.plant).subscribe((res:any)=>{
+      if(res.plantLevel !== undefined)
+      alert("Biljka" +res.name +  "je dodata.\nNivo biljke je: " + this.trans.getTranslatedPlantLevel(res.plantLevel) + ".")
+      else alert("Biljka dodata.")
+      this.router.navigate(['/flowers']);
     })
   }
 

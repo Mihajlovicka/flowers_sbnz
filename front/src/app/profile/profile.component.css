@@ -30,3 +30,15 @@
   margin-top: 10px;
   text-align: center;
 }
+
+.centered-text {
+  text-align: center;
+  font-family: Garamond, serif;
+  color: black;
+}
+
+.centered-text h1 {
+  font-size: 3rem;
+  font-family: Garamond, serif;
+  margin-bottom: 1rem;
+}

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Plant} from "../model/plant";
 import {
@@ -16,24 +16,26 @@ import {PlantService} from "../service/plant.service";
 export class FlowerComponent {
   trans = translations;
   rectrans = recomTranslations;
-  plant: Plant=new Plant();
-  rec:PlantRec|undefined;
+  plant: Plant = new Plant();
+  rec: PlantRec | undefined;
 
-  constructor(private route: ActivatedRoute, private service:PlantService,
-              private router:Router) {
-    if(history.state.plant !== undefined)
+  constructor(private route: ActivatedRoute, private service: PlantService,
+              private router: Router) {
+    if (history.state.plant !== undefined)
       this.plant = history.state.plant
-    if(history.state.rec !== undefined){
+    if (history.state.rec !== undefined) {
       this.rec = history.state.rec
-      if(this.rec?.plant)
+      if (this.rec?.plant)
         this.plant = this.rec?.plant
     }
   }
 
   choose() {
-    this.service.choose(this.plant).subscribe((res) =>{
-      alert("Uspesno dodato u vasu kolekciju.")
-      this.router.navigate(['/profile']);
+    this.service.choose(this.plant).subscribe((res) => {
+      if (res == true) {
+        alert("Uspesno dodato u vasu kolekciju.")
+        this.router.navigate(['/profile']);
+      }else alert("Imate vec ovu biljku.")
     })
   }
 }

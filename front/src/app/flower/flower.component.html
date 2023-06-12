@@ -6,6 +6,7 @@
       <div class="left-container">
         <h2>{{ plant.name }}</h2>
         <p><strong>Ocena:</strong> {{ plant.score }}</p>
+        <p *ngIf="plant.plantLevel !==undefined"><strong>Nivo tezine odrzavanja biljke:</strong> {{ trans.getTranslatedPlantLevel(plant.plantLevel) }}</p>
         <p><strong>Nivo nege:</strong> {{ trans.getTranslatedCareLevel(plant.careLevel) }}</p>
         <p><strong>Sunčeva svetlost:</strong></p>
         <ul>

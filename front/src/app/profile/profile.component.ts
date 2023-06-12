@@ -10,9 +10,13 @@ import {Router} from "@angular/router";
 })
 export class ProfileComponent {
   plants:Plant[] = []
-  constructor(private service:PlantService){
+  constructor(private service:PlantService, private router:Router){
     service.allUser().subscribe((res) => {
       this.plants = res
     })
+  }
+
+  click(plant:Plant){
+    this.router.navigate(['/flower'], { state: { plant: plant } });
   }
 }

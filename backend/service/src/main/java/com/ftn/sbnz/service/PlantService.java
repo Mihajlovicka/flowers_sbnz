@@ -39,31 +39,35 @@ public class PlantService {
 //        this.kieContainer = kieContainer;
 //    }
 
-    public void save(Plant plant) {
+    public Plant save(Plant plant) {
         findPlantLevel(plant);
         plantRepository.save(plant);
+        return plant;
     }
 
     private void findPlantLevel(Plant plant) {
         KieSession kieSession = kieContainer.newKieSession("level");
         kieSession.addEventListener(new DebugAgendaEventListener());
         kieSession.insert(plant);
+        kieSession.fireAllRules();
     }
 
     public List<Plant> all() {
         return plantRepository.findAll();
     }
 
-    public void choose(ChosenPlant r) {
+    public boolean choose(ChosenPlant r) {
         User u = userService.getByEmail(r.getUser());
         if(u == null) throw new RuntimeException("Korisnik ne postoji.");
+        if(u.getPlants().contains(r.getPlant())) return false;
         u.addPlant(r.getPlant());
         userService.update(u);
         upScore(r.getPlant());
+        return true;
     }
 
     private void upScore(Plant plant) {
-        plant.setScore(plant.getScore()+1);
+        plant.setScore(plant.getScore()+5);
         plantRepository.save(plant);
     }
 

@@ -73,3 +73,8 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+**/mvnw
+**/mvnw.cmd
+**/.mvn
+.vscode/

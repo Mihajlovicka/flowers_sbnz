@@ -10,6 +10,21 @@ export const CareLevelValues : { [key: string]: string } = {
   [CareLevel.HARD]: 'Tesko',
 };
 
+export enum PlantLevel {
+  EASY= "EASY",
+  MODERATE = "MODERATE",
+  HARD = "HARD",
+  VERY_HARD = "VERY_HARD"
+}
+
+export const PlantLevelValues : { [key: string]: string } = {
+  [PlantLevel.EASY]: 'Lak',
+  [PlantLevel.MODERATE]: 'Srednje tezak',
+  [PlantLevel.HARD]: 'Tezak',
+  [PlantLevel.VERY_HARD]: 'Jako tezak',
+};
+
+
 
 export enum Sunlight {
   FullSun = 'FullSun',
@@ -167,7 +182,8 @@ const enumProperties = {
   WateringNeeds,
   MaintenanceNeeds,
   PlantResistanceLevel,
-  boje
+  boje,
+  PlantLevel
 };
 
 // Generate translation methods for each enum
@@ -199,8 +215,14 @@ const translationMethods = {
   getTranslatedPlantResistanceLevel(plantResistanceLevel: PlantResistanceLevel): string {
     return PlantResistanceLevelTranslations[plantResistanceLevel];
   },
+  getTranslatedPlantLevel(careLevel: PlantLevel): string {
+    return PlantLevelValues[careLevel];
+  },
   getSpaceNeedEnumValue(translatedValue: string): SpaceNeed {
     return Object.keys(SpaceNeedTranslations).find(key => SpaceNeedTranslations[key] === translatedValue) as SpaceNeed;
+  },
+  getPlantLevelEnumValue(translatedValue: string): PlantLevel {
+    return Object.keys(PlantLevelValues).find(key => PlantLevelValues[key] === translatedValue) as PlantLevel;
   },
 
   getNutrientTypeEnumValue(translatedValue: string): NutrientType {

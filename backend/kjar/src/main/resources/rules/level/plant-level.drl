@@ -5,19 +5,159 @@ import  com.ftn.sbnz.model.user.*;
 import  com.ftn.sbnz.model.drools.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
-
-rule "Plant level easy"
-when
-    $plant: Plant()
-    eval($plant.getMaintenance().getWateringNeeds())
-    eval($plant.getMaintenance().getMaintenanceNeeds())
-    eval($plant.getMaintenance().getResistant())
-    eval($plant.getCareLevel())
-    eval($plant.getEnvironment().isAirCirculationSensitivity())
-then
-    System.out.println("Plant: " + $plant);
-    modify($plant){setPlantLevel(PlantLevel.EASY)}
-//    System.out.println("Plant: " + $plant.getName() + " level " + PlantLevel.EASY);
+declare Level
+    level:PlantLevel
 end
 
+rule "Plant level m l"
+salience 10
+lock-on-active
+when
+    $plant: Plant()
+    eval($plant.getMaintenance().getMaintenanceNeeds() == MaintenanceNeeds.LOW)
+then
+    insert(new Level(PlantLevel.EASY));
+end
+
+rule "Plant level m a"
+salience 10
+lock-on-active
+when
+    $plant: Plant()
+    eval($plant.getMaintenance().getMaintenanceNeeds() == MaintenanceNeeds.AVERAGE)
+then
+    insert(new Level(PlantLevel.EASY));
+    insert(new Level(PlantLevel.MODERATE));
+end
+
+rule "Plant level m h"
+salience 10
+lock-on-active
+when
+    $plant: Plant()
+    eval($plant.getMaintenance().getMaintenanceNeeds() == MaintenanceNeeds.HIGH)
+then
+    insert(new Level(PlantLevel.HARD));
+    insert(new Level(PlantLevel.VERY_HARD));
+end
+
+rule "Plant level res hr"
+salience 10
+lock-on-active
+when
+    $plant: Plant()
+    eval($plant.getMaintenance().getResistant() == PlantResistanceLevel.HIGH_RESISTANT)
+then
+    insert(new Level(PlantLevel.EASY));
+end
+
+rule "Plant level res mr"
+salience 10
+lock-on-active
+when
+    $plant: Plant()
+    eval($plant.getMaintenance().getResistant() == PlantResistanceLevel.MODERATELY_RESISTANT)
+then
+    insert(new Level(PlantLevel.MODERATE));
+    insert(new Level(PlantLevel.HARD));
+end
+
+rule "Plant level res s"
+salience 10
+lock-on-active
+when
+    $plant: Plant()
+    eval($plant.getMaintenance().getResistant() == PlantResistanceLevel.SENSITIVE)
+then
+    insert(new Level(PlantLevel.HARD));
+    insert(new Level(PlantLevel.VERY_HARD));
+end
+
+rule "Plant level c e"
+salience 10
+lock-on-active
+when
+    $plant: Plant()
+    eval($plant.getCareLevel() == CareLevel.EASY)
+then
+    insert(new Level(PlantLevel.EASY));
+end
+
+rule "Plant level c m"
+salience 10
+lock-on-active
+when
+    $plant: Plant()
+    eval($plant.getCareLevel() == CareLevel.MEDIUM)
+then
+    insert(new Level(PlantLevel.MODERATE));
+    insert(new Level(PlantLevel.HARD));
+end
+
+rule "Plant level c h"
+salience 10
+lock-on-active
+when
+    $plant: Plant()
+    eval($plant.getCareLevel() == CareLevel.HARD)
+then
+    insert(new Level(PlantLevel.VERY_HARD));
+    insert(new Level(PlantLevel.HARD));
+end
+
+
+rule "Plant level a s"
+salience 10
+lock-on-active
+when
+    $plant: Plant()
+    eval($plant.getEnvironment().isAirCirculationSensitivity())
+then
+    insert(new Level(PlantLevel.HARD));
+    insert(new Level(PlantLevel.VERY_HARD));
+end
+
+rule "Plant level a  ns"
+salience 10
+lock-on-active
+when
+    $plant: Plant()
+    eval(!($plant.getEnvironment().isAirCirculationSensitivity()))
+then
+    insert(new Level(PlantLevel.EASY));
+    insert(new Level(PlantLevel.MODERATE));
+end
+
+
+rule "Find Level with Most Objects"
+no-loop
+salience 0
+when
+    $plant: Plant(plantLevel == null)
+    $levels: Map() from accumulate(
+        Level($level: level),
+        init(Map levelsCount = new HashMap<>();),
+        action(Integer count = (Integer) levelsCount.getOrDefault($level, 0);
+                           levelsCount.put($level, count + 1);),
+        result(levelsCount)
+    )
+    $maxLevel: PlantLevel() from accumulate(
+        $entry: Map.Entry() from $levels.entrySet(),
+        init(int maxCount = 0; PlantLevel maxLevel = null;),
+        action(
+            int count = (Integer) $entry.getValue();
+            if (count > maxCount) {
+                maxCount = count;
+                maxLevel = (PlantLevel) $entry.getKey();
+            }
+        ),
+        result(maxLevel)
+    )
+then
+    System.out.println("All: " + $levels);
+    System.out.println("Level with the most objects: " + $maxLevel);
+    modify($plant){setPlantLevel($maxLevel)}
+end

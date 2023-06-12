@@ -5,6 +5,7 @@ import com.ftn.sbnz.dto.RecommendPreferences;
 import com.ftn.sbnz.model.disease.SpacingBad;
 import com.ftn.sbnz.model.disease.SpacingGood;
 import com.ftn.sbnz.model.drools.PlantRec;
+import com.ftn.sbnz.model.drools.UserLevelInsert;
 import com.ftn.sbnz.model.drools.UserPlant;
 import com.ftn.sbnz.model.enums.SpaceNeed;
 import com.ftn.sbnz.model.plant.Plant;
@@ -50,9 +51,6 @@ public class RecommendationService {
         kieSession.insert(recommendedPlants);
 
         kieSession.fireAllRules();
-        for (Long k : recommendedPlants.keySet()) {
-            System.out.println("k: " + k + " v: " + recommendedPlants.get(k).getPoints());
-        }
         kieSession.dispose();
 
         return getSorted(recommendedPlants);
@@ -64,7 +62,7 @@ public class RecommendationService {
         kieSession.insert(u.getPlantCareUserForm());
         kieSession.insert(r.getLook());
         kieSession.insert(r.getEnv());
-
+        kieSession.insert(new UserLevelInsert(u.getPlantCareUserForm().getUserLevel()));
         for(Plant p: u.getPlants()){
             kieSession.insert(new UserPlant(p.getId()));
         }

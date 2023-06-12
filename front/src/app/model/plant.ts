@@ -2,6 +2,7 @@ import {
   CareLevel,
   MaintenanceNeeds,
   NutrientType,
+  PlantLevel,
   PlantResistanceLevel,
   PlantType,
   Season,
@@ -13,6 +14,7 @@ import {
 export class Plant {
   name: string= '';
   score: number= 0.0;
+  plantLevel:PlantLevel |undefined;
   careLevel: CareLevel= CareLevel.EASY;
   environment: Environment= new Environment();
   description: Description= new Description();

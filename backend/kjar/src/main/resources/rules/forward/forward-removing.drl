@@ -26,6 +26,10 @@ declare SunlightChosen
     sunlight: Sunlight[]
 end
 
+declare PlantLevelChosen
+    level: PlantLevel
+end
+
 rule "Water Needs Low, Maintenance needs low"
 salience 30
 when
@@ -119,12 +123,23 @@ when
      insert(new SunlightChosen(sunlightArray));
  end
 
+rule "Match User Level"
+ salience 30
+when
+     Plant($plantLevel : plantLevel)
+     UserLevelInsert($userLevel : userLevel)
+     eval($plantLevel.ordinal() == $userLevel.ordinal())
+ then
+    insert(new PlantLevelChosen($plantLevel));
+ end
+
 
 rule "Collect All"
 salience 20
 when
     SunlightChosen($sunlight:sunlight)
-    $plant: Plant()
+    PlantLevelChosen($careLevel: level)
+    $plant: Plant(plantLevel == $careLevel)
     Number(intValue >= 1) from accumulate(
         $w:WateringNeedsChosen(needs == $plant.getMaintenance().getWateringNeeds()),
         count($w)
@@ -140,7 +155,6 @@ when
     eval($plant.getEnvironment().getSunlight().containsAll(Arrays.asList($sunlight)))
 
     $userPlants: List(size == 0) from collect(UserPlant(id == $plant.getId()))
-
 then
     System.out.println("Plant: " + $plant.getName());
 //    System.out.println("Plants: " + $userPlants);

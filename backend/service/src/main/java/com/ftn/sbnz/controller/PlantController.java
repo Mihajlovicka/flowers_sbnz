@@ -20,9 +20,8 @@ public class PlantController {
     RecommendationService recommendationService;
 
     @PostMapping("/new")
-    public ResponseEntity register(@RequestBody Plant plant){
-        plantService.save(plant);
-        return new ResponseEntity(null, HttpStatus.CREATED);
+    public ResponseEntity newPlant(@RequestBody Plant plant){
+        return new ResponseEntity(plantService.save(plant), HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
@@ -37,8 +36,7 @@ public class PlantController {
 
     @PostMapping("/choose")
     public ResponseEntity choose(@RequestBody ChosenPlant r){
-        plantService.choose(r);
-        return new ResponseEntity(null, HttpStatus.CREATED);
+        return new ResponseEntity(plantService.choose(r), HttpStatus.CREATED);
     }
 
     @GetMapping("/all/user/{email}")
@@ -47,9 +45,5 @@ public class PlantController {
     }
 
 }
-//vise biljaka
 
-//plant level
-
-//plant level biranje kod dodavanja nove biljke
-//kad doda biljku poveca se score
+//dopuna profila
