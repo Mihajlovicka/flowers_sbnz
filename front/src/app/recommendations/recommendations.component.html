@@ -1,0 +1,11 @@
+<div class="container">
+  <div class="row">
+    <div class="col" *ngFor="let r of recomm">
+      <mat-card class="image-card" (click)="click(r)">
+        <img [src]="r.plant.description.picture" alt="Image">
+        <div class="number-box">{{ r.points }}</div>
+        <div class="image-description">{{ r.plant.name }}</div>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -198,10 +198,59 @@ const translationMethods = {
   },
   getTranslatedPlantResistanceLevel(plantResistanceLevel: PlantResistanceLevel): string {
     return PlantResistanceLevelTranslations[plantResistanceLevel];
+  },
+  getSpaceNeedEnumValue(translatedValue: string): SpaceNeed {
+    return Object.keys(SpaceNeedTranslations).find(key => SpaceNeedTranslations[key] === translatedValue) as SpaceNeed;
+  },
+
+  getNutrientTypeEnumValue(translatedValue: string): NutrientType {
+    return Object.keys(NutrientTypeTranslations).find(key => NutrientTypeTranslations[key] === translatedValue) as NutrientType;
+  },
+
+  getSunlightEnumValue(translatedValue: string): Sunlight {
+    return Object.keys(SunlightStringValues).find(key => SunlightStringValues[key] === translatedValue) as Sunlight;
+  },
+
+  getResistantNeedsEnumValue(translatedValue: string): PlantResistanceLevel {
+    return Object.keys(PlantResistanceLevelTranslations).find(key => PlantResistanceLevelTranslations[key] === translatedValue) as PlantResistanceLevel;
+  },
+
+  getMaintenaceNeedsEnumValue(translatedValue: string): MaintenanceNeeds {
+    return Object.keys(MaintenanceNeedsTranslations).find(key => MaintenanceNeedsTranslations[key] === translatedValue) as MaintenanceNeeds;
+  },
+
+  getWateringNeedsEnumValue(translatedValue: string): WateringNeeds {
+    return Object.keys(WateringNeedsTranslations).find(key => WateringNeedsTranslations[key] === translatedValue) as WateringNeeds;
+  },
+
+  getPlantTypeEnumValue(translatedValue: string): PlantType {
+    return Object.keys(PlantTypeTranslations).find(key => PlantTypeTranslations[key] === translatedValue) as PlantType;
+  },
+
+  getSeasonsEnumValue(translatedValue: string): Season {
+    return Object.keys(SeasonTranslations).find(key => SeasonTranslations[key] === translatedValue) as Season;
   }
 };
 
+
+
+// Generate translation methods for each enum
+const stringValues = {
+  spaces: Object.values(SpaceNeedTranslations),
+  nutrients: Object.values(NutrientTypeTranslations),
+  sunlights: Object.values(SunlightStringValues),
+  waterings: Object.values(WateringNeedsTranslations),
+  maintenances: Object.values(MaintenanceNeedsTranslations),
+  resistants: Object.values(PlantResistanceLevelTranslations),
+  plants: Object.values(PlantTypeTranslations),
+  seasons: Object.values(SeasonTranslations),
+  plantTypes: Object.values(PlantTypeTranslations),
+  colors: boje
+};
+
+
 export const translations = {
+  ...stringValues,
   ...enumProperties,
   ...translationMethods
 };

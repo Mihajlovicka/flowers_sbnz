@@ -1,6 +1,7 @@
 package com.ftn.sbnz.model.plant;
 
 import com.ftn.sbnz.model.enums.CareLevel;
+import com.ftn.sbnz.model.enums.PlantLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class Plant {
     private String name;
     private Double score;
     private CareLevel careLevel;
+    private PlantLevel plantLevel;
     @Embedded
     private Environment environment;
     @Embedded

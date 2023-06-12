@@ -8,8 +8,6 @@ export class UserService {
 
   host: string = 'http://localhost:8080/user'
 
-  loggedIn:User = new User();
-
   constructor(private http: HttpClient) {
   }
 
@@ -24,9 +22,19 @@ export class UserService {
         throw error;
       }),
       map((response: any) => {
-        this.loggedIn = response;
+        localStorage.setItem("user",response.email)
         return response;
       })
     )
+  }
+
+  getLogged(){
+    if(localStorage.getItem("user") !== undefined && localStorage.getItem("user") !== '')
+      return localStorage.getItem("user")
+    return null;
+  }
+
+  logOut(){
+    localStorage.removeItem("user")
   }
 }

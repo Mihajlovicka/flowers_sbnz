@@ -23,7 +23,7 @@ public class PlantRec {
         this.plant = plant;
         this.points = points;
         this.fit = 0.0;
-        this.compatible = false;
+        this.compatible = true;
         this.potSize = "";
     }
 }

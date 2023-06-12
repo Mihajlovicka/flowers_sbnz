@@ -1,4 +1,5 @@
 <div class="container">
+  <div class="left">
   <mat-tab-group class="tab-group">
     <!-- Plant Details Tab -->
     <mat-tab label="Detalji biljke">
@@ -8,7 +9,7 @@
         <p><strong>Nivo nege:</strong> {{ trans.getTranslatedCareLevel(plant.careLevel) }}</p>
         <p><strong>Sunčeva svetlost:</strong></p>
         <ul>
-          <li *ngFor="let color of plant.environment.sunlight">{{ color }}</li>
+          <li *ngFor="let color of plant.environment.sunlight">{{ trans.getTranslatedSunlight(color) }}</li>
         </ul>
         <p><strong>Vlažnost:</strong> {{ plant.environment.humidity }}</p>
         <p><strong>Osetljivost na cirkulaciju vazduha:</strong>
@@ -56,9 +57,31 @@
         <p><strong>Otpornost biljke:</strong> {{ trans.getTranslatedPlantResistanceLevel(plant.maintenance.resistant) }}</p>
       </div>
     </mat-tab>
+
+    <!-- Maintenance Tab -->
+    <mat-tab label="Saveti" *ngIf="rec !== undefined">
+      <div class="left-container">
+        <p><strong>Ova biljka ti odgovara:</strong> {{ rec.points }}% </p>
+        <p><strong>Ova biljka odgovara tvojim biljkama:</strong> {{ rec.fit }}%</p>
+        <p><strong>Velicina saksije:</strong> {{ rec.potSize }}</p>
+        <p><strong>Vrsta saksije:</strong> </p>
+        <ul>
+          <li *ngFor="let color of rec.potTypes">{{ rectrans.getTranslatedPotFromEnum(color) }}</li>
+        </ul>
+      </div>
+    </mat-tab>
   </mat-tab-group>
+
+  <div class="button-container">
+    <button mat-raised-button (click)="choose()">Dodaj ovu biljku</button>
+  </div>
+  </div>
 
   <div class="right-container">
     <img [src]="plant.description.picture" alt="Slika biljke">
   </div>
+
+
 </div>
+
+

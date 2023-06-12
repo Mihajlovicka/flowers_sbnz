@@ -1,0 +1,23 @@
+package level;
+import  com.ftn.sbnz.model.enums.*;
+import  com.ftn.sbnz.model.plant.*;
+import  com.ftn.sbnz.model.user.*;
+import  com.ftn.sbnz.model.drools.*;
+import java.util.List;
+import java.util.ArrayList;
+
+
+rule "Plant level easy"
+when
+    $plant: Plant()
+    eval($plant.getMaintenance().getWateringNeeds())
+    eval($plant.getMaintenance().getMaintenanceNeeds())
+    eval($plant.getMaintenance().getResistant())
+    eval($plant.getCareLevel())
+    eval($plant.getEnvironment().isAirCirculationSensitivity())
+then
+    System.out.println("Plant: " + $plant);
+    modify($plant){setPlantLevel(PlantLevel.EASY)}
+//    System.out.println("Plant: " + $plant.getName() + " level " + PlantLevel.EASY);
+end
+

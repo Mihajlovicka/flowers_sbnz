@@ -20,7 +20,9 @@
 }
 
 .image-card {
-  height: 40vh;
+  height: 100%;
+  width: auto;
+  max-height: 300px;
   background-color: transparent;
   border: none;
   box-shadow: none;

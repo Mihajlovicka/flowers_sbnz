@@ -20,4 +20,12 @@ public class UserService {
     public User login(String email, String password){
         return userRepository.findByEmailAndPassword(email,password).orElseThrow( () -> new RuntimeException("Neuspesna prijava."));
     }
+
+    public User getByEmail(String email){
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
+    public void update(User u) {
+        this.userRepository.save(u);
+    }
 }

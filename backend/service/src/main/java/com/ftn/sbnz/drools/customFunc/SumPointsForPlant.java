@@ -12,13 +12,13 @@ import java.util.HashMap;
 public class SumPointsForPlant implements org.kie.api.runtime.rule.AccumulateFunction<SumPointsForPlant.SumData>{
 
     public static class SumData implements Externalizable {
-        HashMap<String, Double> points = new HashMap();
+        HashMap<Long, Double> points = new HashMap();
 
 
         public SumData() {}
 
         public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-            points = (HashMap<String, Double>) in.readObject();
+            points = (HashMap<Long, Double>) in.readObject();
         }
 
         public void writeExternal(ObjectOutput out) throws IOException {
@@ -39,12 +39,12 @@ public class SumPointsForPlant implements org.kie.api.runtime.rule.AccumulateFun
     @Override
     public void accumulate(SumData sumData, Object recommendPoint) {
         Double b = ((RecommendationPoints)recommendPoint).getPoints() * ((RecommendationPoints)recommendPoint).getPlant().getScore();
-        sumData.points.merge(((RecommendationPoints) recommendPoint).getPlant().getName(), b, Double::sum);
+        sumData.points.merge(((RecommendationPoints) recommendPoint).getPlant().getId(), b, Double::sum);
     }
 
     @Override
     public void reverse(SumData sumData, Object recommendPoint) throws Exception {
-        sumData.points.remove(((RecommendationPoints) recommendPoint).getPlant().getName());
+        sumData.points.remove(((RecommendationPoints) recommendPoint).getPlant().getId());
     }
 
     @Override

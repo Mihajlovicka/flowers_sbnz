@@ -2,6 +2,7 @@ package forward;
 import  com.ftn.sbnz.model.enums.*;
 import  com.ftn.sbnz.model.plant.*;
 import  com.ftn.sbnz.model.user.*;
+import  com.ftn.sbnz.model.drools.*;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -137,7 +138,12 @@ when
         count($w)
     )
     eval($plant.getEnvironment().getSunlight().containsAll(Arrays.asList($sunlight)))
+
+    $userPlants: List(size == 0) from collect(UserPlant(id == $plant.getId()))
+
 then
     System.out.println("Plant: " + $plant.getName());
+//    System.out.println("Plants: " + $userPlants);
     insert(new FittingPlant($plant));
 end
+

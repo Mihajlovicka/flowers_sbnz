@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 import accumulate com.ftn.sbnz.drools.customFunc.SumPointsForPlant sumForPlant;
 
-global HashMap<String, PlantRecom> recommendedPlants;
+global HashMap<Long, PlantRecom> recommendedPlants;
 
 declare SizePoints
     point: Number
@@ -236,11 +236,11 @@ when
     Number($avg : doubleValue) from accumulate(
                                 $points: Double() from $total.values(),
                             	average($points) );
-    $point : Double() from $total.get($plant.getName())
+    $point : Double() from $total.get($plant.getId())
     eval($point >= $avg)
 then
-    modify(recommendedPlants){put($plant.getName(), new PlantRec($plant,$point))}
+    modify(recommendedPlants){put($plant.getId(), new PlantRec($plant,$point))}
     System.out.println("----------" + $total + "---------");
     System.out.println("----------" + $avg + "---------");
-    System.out.println("----------" + $total.get($plant.getName()) + "--- "  +$plant.getName()+"------");
+    System.out.println("----------" + $total.get($plant.getId()) + "--- "  +$plant.getName()+"------");
 end

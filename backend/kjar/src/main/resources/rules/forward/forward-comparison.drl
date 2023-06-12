@@ -12,34 +12,32 @@ import java.util.HashMap;
 
 import accumulate com.ftn.sbnz.drools.customFunc.CompMaitPlant compMaitPlant;
 
-//recomented cu menjati na osnovu fiiting plant
-//za svaku fitting plant prosecan od svih user plant
 rule "Plant care comp"
 salience -10
 when
     $recommendedPlants: HashMap(this != null) from recommendedPlants
     eval(!$recommendedPlants.isEmpty())
     FittingPlant($fitPlant: plant)
-    eval($recommendedPlants.containsKey($fitPlant.getName()))
+    eval($recommendedPlants.containsKey($fitPlant.getId()))
     $userPlants: List() from collect(UserPlant())
-    accumulate(UserPlant($name:plantName) from $userPlants, $userPlantsNames: collectList($name))
-    $compareToPlants: List() from accumulate($p: Plant(name memberOf $userPlantsNames), collectList($p))
+    accumulate(UserPlant($id:id) from $userPlants, $userPlantsNames: collectList($id))
+    $compareToPlants: List() from accumulate($p: Plant(id memberOf $userPlantsNames), collectList($p))
     $compareTo: Plant() from $compareToPlants
-    not(CompMaitPlantO(rec.getName() == $compareTo.getName() && plant.getName() == $fitPlant.getName()))
+    not(CompMaitPlantO(rec.getId() == $compareTo.getId() && plant.getId() == $fitPlant.getId()))
 then
-//    System.out.println($fitPlant);
-//    System.out.println($compareTo);
+    System.out.println($fitPlant);
+    System.out.println($compareTo);
     insert(new CompMaitPlantO($fitPlant, $compareTo));
 end
 
 rule "Plant care comp calc"
 salience -20
 when
-    FittingPlant($fitPlant: plant.getName())
+    FittingPlant($fitPlant: plant.getId())
     $recommendedPlants: HashMap(this != null) from recommendedPlants
     eval(!$recommendedPlants.isEmpty())
     eval($recommendedPlants.containsKey($fitPlant))
-    accumulate($v: CompMaitPlantO(plant.getName() == $fitPlant), $match:compMaitPlant($v))
+    accumulate($v: CompMaitPlantO(plant.getId() == $fitPlant), $match:compMaitPlant($v))
     Number($avg : doubleValue) from accumulate(
         $points: Double() from $match,
         average($points) );
@@ -60,7 +58,7 @@ end
 
 query sameNutritionTypes(ArrayList nutritionTypes1, ArrayList nutritionTypes2)
     $commonTypes: ArrayList() from collect(NutrientType(this memberOf nutritionTypes1) from nutritionTypes2)
-    eval($commonTypes.isEmpty())
+    eval($commonTypes.size() >= 2)
 end
 
 
@@ -78,12 +76,12 @@ when
     getComp($plant, $rec;)
     $recommendedPlants: HashMap(this != null) from recommendedPlants
     eval(!$recommendedPlants.isEmpty())
-    eval($recommendedPlants.containsKey($plant.getName()))
+    eval($recommendedPlants.containsKey($plant.getId()))
 then
     System.out.println("Plant: " + $plant + " plant:" + $rec + "are compatible ");
-    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($plant.getName()); // Create a new instance of PlantRec with the updated value
+    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($plant.getId()); // Create a new instance of PlantRec with the updated value
     modifiedValue.setCompatible(true);
-    modify($recommendedPlants){put($plant.getName(), modifiedValue);}
+    modify($recommendedPlants){put($plant.getId(), modifiedValue);}
 end
 
 //nivo VI
@@ -95,13 +93,13 @@ when
     FittingPlant($fitPlant: plant, $watering: plant.getMaintenance().getWateringNeeds())
     $recommendedPlants: HashMap(this != null) from recommendedPlants
     eval(!$recommendedPlants.isEmpty())
-    eval($recommendedPlants.containsKey($fitPlant.getName()))
+    eval($recommendedPlants.containsKey($fitPlant.getId()))
     eval($watering == WateringNeeds.LOW)
 then
-    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getName()); // Create a new instance of PlantRec with the updated value
+    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getId()); // Create a new instance of PlantRec with the updated value
     ArrayList<PotType> l = new ArrayList<PotType>(Arrays.asList(PotType.PLASTIC));
     modifiedValue.setPotTypes(l);
-    modify($recommendedPlants){put($fitPlant.getName(), modifiedValue);}
+    modify($recommendedPlants){put($fitPlant.getId(), modifiedValue);}
 end
 
 rule "pot terracotta or ceramic"
@@ -110,13 +108,13 @@ when
     FittingPlant($fitPlant: plant, $watering: plant.getMaintenance().getWateringNeeds())
     $recommendedPlants: HashMap(this != null) from recommendedPlants
     eval(!$recommendedPlants.isEmpty())
-    eval($recommendedPlants.containsKey($fitPlant.getName()))
+    eval($recommendedPlants.containsKey($fitPlant.getId()))
     eval($watering == WateringNeeds.HIGH)
 then
-    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getName()); // Create a new instance of PlantRec with the updated value
+    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getId()); // Create a new instance of PlantRec with the updated value
     ArrayList<PotType> l = new ArrayList<PotType>(Arrays.asList(PotType.TERRACOTTA, PotType.CERAMIC));
     modifiedValue.setPotTypes(l);
-    modify($recommendedPlants){put($fitPlant.getName(), modifiedValue);}
+    modify($recommendedPlants){put($fitPlant.getId(), modifiedValue);}
 end
 
 rule "pot plastic or ceramic"
@@ -125,13 +123,13 @@ when
     FittingPlant($fitPlant: plant, $watering: plant.getMaintenance().getWateringNeeds())
     $recommendedPlants: HashMap(this != null) from recommendedPlants
     eval(!$recommendedPlants.isEmpty())
-    eval($recommendedPlants.containsKey($fitPlant.getName()))
+    eval($recommendedPlants.containsKey($fitPlant.getId()))
     eval($watering == WateringNeeds.AVERAGE)
 then
-    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getName()); // Create a new instance of PlantRec with the updated value
+    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getId()); // Create a new instance of PlantRec with the updated value
     ArrayList<PotType> l = new ArrayList<PotType>(Arrays.asList(PotType.PLASTIC, PotType.CERAMIC));
     modifiedValue.setPotTypes(l);
-    modify($recommendedPlants){put($fitPlant.getName(), modifiedValue);}
+    modify($recommendedPlants){put($fitPlant.getId(), modifiedValue);}
 end
 
 
@@ -142,12 +140,12 @@ when
     FittingPlant($fitPlant: plant, $space: plant.getEnvironment().getSpaceNeed())
     $recommendedPlants: HashMap(this != null) from recommendedPlants
     eval(!$recommendedPlants.isEmpty())
-    eval($recommendedPlants.containsKey($fitPlant.getName()))
+    eval($recommendedPlants.containsKey($fitPlant.getId()))
     eval($space == SpaceNeed.UNDERGROUND || $space == SpaceNeed.COMPACT)
 then
-    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getName()); // Create a new instance of PlantRec with the updated value
+    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getId()); // Create a new instance of PlantRec with the updated value
     modifiedValue.setPotSize("These plants typically have smaller root systems and do not require a lot of space. You can choose a pot that is slightly larger than the current root ball of the plant. This will provide enough room for the roots to grow comfortably.");
-    modify($recommendedPlants){put($fitPlant.getName(), modifiedValue);}
+    modify($recommendedPlants){put($fitPlant.getId(), modifiedValue);}
 end
 
 rule "pot size moderate"
@@ -156,12 +154,12 @@ when
     FittingPlant($fitPlant: plant, $space: plant.getEnvironment().getSpaceNeed())
     $recommendedPlants: HashMap(this != null) from recommendedPlants
     eval(!$recommendedPlants.isEmpty())
-    eval($recommendedPlants.containsKey($fitPlant.getName()))
+    eval($recommendedPlants.containsKey($fitPlant.getId()))
     eval($space == SpaceNeed.MODERATE)
 then
-    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getName()); // Create a new instance of PlantRec with the updated value
+    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getId()); // Create a new instance of PlantRec with the updated value
     modifiedValue.setPotSize("These plants require a bit more space for their root systems. You can select a pot that allows for moderate root expansion. A pot with a diameter and depth that is 1.5 to 2 times the size of the current root ball can be suitable.");
-    modify($recommendedPlants){put($fitPlant.getName(), modifiedValue);}
+    modify($recommendedPlants){put($fitPlant.getId(), modifiedValue);}
 end
 
 rule "pot size agressive or vertical"
@@ -170,12 +168,12 @@ when
     FittingPlant($fitPlant: plant, $space: plant.getEnvironment().getSpaceNeed())
     $recommendedPlants: HashMap(this != null) from recommendedPlants
     eval(!$recommendedPlants.isEmpty())
-    eval($recommendedPlants.containsKey($fitPlant.getName()))
+    eval($recommendedPlants.containsKey($fitPlant.getId()))
     eval($space == SpaceNeed.AGGRESSIVE || $space == SpaceNeed.VERTICAL)
 then
-    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getName()); // Create a new instance of PlantRec with the updated value
+    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getId()); // Create a new instance of PlantRec with the updated value
     modifiedValue.setPotSize("These plants tend to have larger and more extensive root systems. It is recommended to choose a pot that provides ample space for their root growth. A pot with a diameter and depth that is at least 2 to 3 times the size of the current root ball can accommodate the plant's growth requirements.");
-    modify($recommendedPlants){put($fitPlant.getName(), modifiedValue);}
+    modify($recommendedPlants){put($fitPlant.getId(), modifiedValue);}
 end
 
 
@@ -185,12 +183,12 @@ when
     FittingPlant($fitPlant: plant, $space: plant.getEnvironment().getSpaceNeed())
     $recommendedPlants: HashMap(this != null) from recommendedPlants
     eval(!$recommendedPlants.isEmpty())
-    eval($recommendedPlants.containsKey($fitPlant.getName()))
+    eval($recommendedPlants.containsKey($fitPlant.getId()))
     eval($space == SpaceNeed.DENSE)
 then
-    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getName()); // Create a new instance of PlantRec with the updated value
+    PlantRec modifiedValue = (PlantRec)$recommendedPlants.get($fitPlant.getId()); // Create a new instance of PlantRec with the updated value
     modifiedValue.setPotSize("These plants may have compact foliage or dense growth habits. While the root system may not be extensive, you still need to consider the overall size and spread of the plant. Choose a pot that allows enough space for the plant to grow without crowding its foliage.");
-    modify($recommendedPlants){put($fitPlant.getName(), modifiedValue);}
+    modify($recommendedPlants){put($fitPlant.getId(), modifiedValue);}
 end
 
 

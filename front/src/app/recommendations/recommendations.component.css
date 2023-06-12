@@ -2,7 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top:10%;
+  margin-top: 10%;
   font-family: Garamond, serif;
   font-size: 25px;
 }
@@ -24,9 +24,21 @@
   background-color: transparent;
   border: none;
   box-shadow: none;
+  position: relative;
 }
 
 .image-description {
   margin-top: 10px;
   text-align: center;
+}
+
+
+.number-box {
+  position: absolute;
+  top:5px;
+  right: 5px;
+  background-color: aquamarine;
+  color: black;
+  padding: 5px;
+  border-radius: 50%;
 }

@@ -1,4 +1,4 @@
-package forward;
+package backward;
 import  com.ftn.sbnz.model.enums.*;
 import  com.ftn.sbnz.model.plant.*;
 import  com.ftn.sbnz.model.user.*;
@@ -10,7 +10,6 @@ declare PossibleDisease
     disease:String;
     symptomCount:Integer;
 end
-
 
 
 query treatmentForDisease(String treatment, String disease)

@@ -19,13 +19,13 @@ import java.util.List;
 public class CompMaitPlant implements org.kie.api.runtime.rule.AccumulateFunction<CompMaitPlant.CountData>{
 
     public static class CountData implements Externalizable {
-        HashMap<String, Double> points = new HashMap();
+        HashMap<Long, Double> points = new HashMap();
 
 
         public CountData() {}
 
         public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-            points = ( HashMap<String, Double>) in.readObject();
+            points = ( HashMap<Long, Double>) in.readObject();
         }
 
         public void writeExternal(ObjectOutput out) throws IOException {
@@ -61,7 +61,7 @@ public class CompMaitPlant implements org.kie.api.runtime.rule.AccumulateFunctio
             }
         }
 
-        data.points.merge(plantRec.getName(), d/3, Double::sum);
+        data.points.merge(plantRec.getId(), d/3, Double::sum);
     }
 
 
@@ -70,7 +70,7 @@ public class CompMaitPlant implements org.kie.api.runtime.rule.AccumulateFunctio
         CompMaitPlantO objects = (CompMaitPlantO) o;
         Plant plant = (Plant) objects.getPlant();
         Plant plantRec = (Plant) objects.getRec();
-        data.points.remove(plant.getName());
+        data.points.remove(plant.getId());
     }
 
     @Override

@@ -26,6 +26,8 @@ import { FlowersComponent } from './flowers/flowers.component';
 import {MatCardModule} from "@angular/material/card";
 import { FlowerComponent } from './flower/flower.component';
 import {MatTabsModule} from "@angular/material/tabs";
+import { RecommendFormComponent } from './recommend-form/recommend-form.component';
+import { RecommendationsComponent } from './recommendations/recommendations.component';
 
 
 @NgModule({
@@ -33,7 +35,7 @@ import {MatTabsModule} from "@angular/material/tabs";
     AppComponent,
     HeaderComponent,
     LoginComponent,
-    HomeComponent,RegisterComponent, NewFlowerComponent, ProfileComponent, FlowersComponent, FlowerComponent
+    HomeComponent,RegisterComponent, NewFlowerComponent, ProfileComponent, FlowersComponent, FlowerComponent, RecommendFormComponent, RecommendationsComponent
   ],
   imports: [
     HttpClientModule,

@@ -1,13 +1,15 @@
 <mat-toolbar color="primary" class="transparent-toolbar">
   <span style="font-family: Garamond, serif; font-size:24px; " (click)="home()">My Plants</span>
   <span class="example-spacer"></span>
-  <button mat-icon-button class="example-icon" style="font-size: 14px; width: 100px;" routerLink="/new-flower">Dodaj cvet</button>
-  <button mat-icon-button class="example-icon" style="font-size: 14px; width: 100px;" routerLink="/flowers">Cvece</button>
-
-  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-    <mat-icon style="font-size: 24px;  ">favorite</mat-icon>
+  <button mat-icon-button style="font-size: 14px; width: 100px;" routerLink="/flowers">Cvece</button>
+  <button *ngIf="service.getLogged() != null" mat-icon-button  style="font-size: 14px; width: 200px;" routerLink="/recommend-form">Cvetna preporuka</button>
+  <button mat-icon-button [matMenuTriggerFor]="menu" style="margin-left: 20px">
+    <mat-icon>menu</mat-icon>
   </button>
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-    <mat-icon style="font-size: 24px;  ">share</mat-icon>
-  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/new-flower">Dodaj cvet</button>
+    <button mat-menu-item (click)="login()" *ngIf="service.getLogged() == null">Prijava</button>
+    <button mat-menu-item (click)="logout()" *ngIf="service.getLogged() != null">Odjava</button>
+    <button mat-menu-item (click)="register()" *ngIf="service.getLogged() == null">Registracija</button>
+  </mat-menu>
 </mat-toolbar>

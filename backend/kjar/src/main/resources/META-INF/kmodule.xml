@@ -1,3 +1,14 @@
 <kmodule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://jboss.org/kie/6.0.0/kmodule">
+    <kbase name="fKbase" eventProcessingMode="stream" packages="forward">
+        <ksession name="forward"/>
+    </kbase>
+    <kbase name="bKbase" eventProcessingMode="stream" packages="backward">
+        <ksession name="backward"/>
+    </kbase>
+
+    <kbase name="lKbase" eventProcessingMode="stream" packages="level">
+        <ksession name="level"/>
+    </kbase>
+
 
 </kmodule>

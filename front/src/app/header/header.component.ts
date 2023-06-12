@@ -1,6 +1,7 @@
 import {Component, ElementRef, AfterViewInit, Renderer2} from '@angular/core';
 import { Location } from '@angular/common';
 import {Router} from "@angular/router";
+import {UserService} from "../service/user.service";
 
 @Component({
   selector: 'app-header',
@@ -11,7 +12,8 @@ export class HeaderComponent implements AfterViewInit {
   constructor(private elementRef: ElementRef,
               private renderer: Renderer2,
               private location: Location,
-              private router:Router) {}
+              private router:Router,
+              public service:UserService) {}
 
   ngAfterViewInit() {
     const currentUrl = this.location.path();
@@ -25,4 +27,16 @@ export class HeaderComponent implements AfterViewInit {
     this.router.navigate(['']);
   }
 
+  login(){
+    this.router.navigate(['login']);
+  }
+
+  logout(){
+    this.service.logOut()
+    this.router.navigate(['']);
+  }
+
+  register(){
+    this.router.navigate(['register']);
+  }
 }

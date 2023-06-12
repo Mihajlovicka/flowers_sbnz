@@ -49,7 +49,7 @@
         <mat-form-field appearance="fill">
           <mat-label>Nacin sirenja biljke</mat-label>
           <mat-select [(ngModel)]="plant.environment.spaceNeed" name="spaceNeed" required>
-            <mat-option *ngFor="let space of spaces" [value]="getSpaceNeedEnumValue(space)">{{ space }}</mat-option>
+            <mat-option *ngFor="let space of trans.spaces" [value]="trans.getSpaceNeedEnumValue(space)">{{ space }}</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -57,16 +57,16 @@
         <mat-form-field appearance="fill">
           <mat-label>Potrebne hranjive materije</mat-label>
           <mat-select [(ngModel)]="plant.environment.nutrientType" name="nutrientType" required multiple>
-            <mat-option *ngFor="let nutrientType of nutrients"
-                        [value]="getNutrientTypeEnumValue(nutrientType)">{{ nutrientType }}</mat-option>
+            <mat-option *ngFor="let nutrientType of trans.nutrients"
+                        [value]="trans.getNutrientTypeEnumValue(nutrientType)">{{ nutrientType }}</mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Sunceva svetlost</mat-label>
           <mat-select [(ngModel)]="plant.environment.sunlight" name="sunlight" required multiple>
-            <mat-option *ngFor="let sunlight of sunlights"
-                        [value]="getSunlightEnumValue(sunlight)">{{ sunlight }}</mat-option>
+            <mat-option *ngFor="let sunlight of trans.sunlights"
+                        [value]="trans.getSunlightEnumValue(sunlight)">{{ sunlight }}</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -83,24 +83,24 @@
         <mat-form-field appearance="fill">
           <mat-label>Zalivanje</mat-label>
           <mat-select [(ngModel)]="plant.maintenance.wateringNeeds" name="wateringNeeds" required>
-            <mat-option *ngFor="let space of waterings"
-                        [value]="getWateringNeedsEnumValue(space)">{{ space }}</mat-option>
+            <mat-option *ngFor="let space of trans.waterings"
+                        [value]="trans.getWateringNeedsEnumValue(space)">{{ space }}</mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Ukupna kolicina odrzavanja</mat-label>
           <mat-select [(ngModel)]="plant.maintenance.maintenanceNeeds" name="maintenanceNeeds" required>
-            <mat-option *ngFor="let space of maintenances"
-                        [value]="getMaintenaceNeedsEnumValue(space)">{{ space }}</mat-option>
+            <mat-option *ngFor="let space of trans.maintenances"
+                        [value]="trans.getMaintenaceNeedsEnumValue(space)">{{ space }}</mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Otpornost</mat-label>
           <mat-select [(ngModel)]="plant.maintenance.resistant" name="resistant" required>
-            <mat-option *ngFor="let space of resistants"
-                        [value]="getResistantNeedsEnumValue(space)">{{ space }}</mat-option>
+            <mat-option *ngFor="let space of trans.resistants"
+                        [value]="trans.getResistantNeedsEnumValue(space)">{{ space }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -133,16 +133,16 @@
         <mat-form-field appearance="fill">
           <mat-label>Vrsta biljke</mat-label>
           <mat-select [(ngModel)]="plant.description.plantType" name="plantType" required>
-            <mat-option *ngFor="let space of plantTypes"
-                        [value]="getPlantTypeEnumValue(space)">{{ space }}</mat-option>
+            <mat-option *ngFor="let space of trans.plantTypes"
+                        [value]="trans.getPlantTypeEnumValue(space)">{{ space }}</mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Sezona</mat-label>
           <mat-select [(ngModel)]="plant.description.seasons" name="seasons" required multiple>
-            <mat-option *ngFor="let space of seasons"
-                        [value]="getSeasonsEnumValue(space)">{{ space }}</mat-option>
+            <mat-option *ngFor="let space of trans.seasons"
+                        [value]="trans.getSeasonsEnumValue(space)">{{ space }}</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -180,7 +180,7 @@
         <mat-form-field appearance="fill">
           <mat-label>Boja</mat-label>
           <mat-select [(ngModel)]="plant.description.color" name="color" multiple>
-            <mat-option *ngFor="let space of colors" [value]="space">{{ space }}</mat-option>
+            <mat-option *ngFor="let space of trans.colors" [value]="space">{{ space }}</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -188,8 +188,8 @@
         <mat-form-field appearance="fill">
           <mat-label>Sezona</mat-label>
           <mat-select [(ngModel)]="plant.description.seasons" name="seasons" multiple>
-            <mat-option *ngFor="let space of seasons"
-                        [value]="getSeasonsEnumValue(space)">{{ space }}</mat-option>
+            <mat-option *ngFor="let space of trans.seasons"
+                        [value]="trans.getSeasonsEnumValue(space)">{{ space }}</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -203,8 +203,8 @@
         <mat-form-field appearance="fill">
           <mat-label>Kada biljka cveta</mat-label>
           <mat-select [(ngModel)]="plant.description.flower.floweringSeason" name="floweringSeason" multiple>
-            <mat-option *ngFor="let space of seasons"
-                        [value]="getSeasonsEnumValue(space)">{{ space }}</mat-option>
+            <mat-option *ngFor="let space of trans.seasons"
+                        [value]="trans.getSeasonsEnumValue(space)">{{ space }}</mat-option>
           </mat-select>
         </mat-form-field>
 

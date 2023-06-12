@@ -1,0 +1,99 @@
+<div class="centered-container">
+  <div class="login-form">
+
+    <form *ngIf="isFirstFormVisible">
+      <h2 class="form-title">Preferencije izgleda</h2>
+      <div class="form-part">
+        <mat-form-field appearance="fill">
+          <mat-label>Boja</mat-label>
+          <mat-select [(ngModel)]="look.color" name="color" multiple>
+            <mat-option *ngFor="let space of colors" [value]="space">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Sezona</mat-label>
+          <mat-select [(ngModel)]="look.seasons" name="seasons" multiple>
+            <mat-option *ngFor="let space of seasons"
+                        [value]="getSeasonsEnumValue(space)">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Vrsta biljke</mat-label>
+          <mat-select [(ngModel)]="look.plantType" name="plantType" required>
+            <mat-option *ngFor="let space of plantTypes"
+                        [value]="getPlantTypeEnumValue(space)">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="checkbox-container">
+          <mat-checkbox [(ngModel)]="look.flower.hasFlowers" name="hasFlowers">
+            Da li biljka cveta
+          </mat-checkbox>
+        </div>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Kada biljka cveta</mat-label>
+          <mat-select [(ngModel)]="look.flower.floweringSeason" name="floweringSeason" multiple>
+            <mat-option *ngFor="let space of seasons"
+                        [value]="getSeasonsEnumValue(space)">{{ space }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-part">
+        <mat-form-field appearance="fill">
+          <mat-label>Minimalna sirina</mat-label>
+          <input matInput type="number" [(ngModel)]="look.size.widthMin" name="widthMin" required>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Maksimalna sirina</mat-label>
+          <input matInput type="number" [(ngModel)]="look.size.widthMax" name="widthMax" required>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Minimalna visina</mat-label>
+          <input matInput type="number" [(ngModel)]="look.size.heightMin" name="heightMin" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Maksimalna visina</mat-label>
+          <input matInput type="number" [(ngModel)]="look.size.heightMax" name="heightMax" required>
+        </mat-form-field>
+
+        <div class="button-container">
+        <button mat-raised-button (click)="showSecondForm()">Dalje</button>
+      </div></div>
+    </form>
+
+    <form *ngIf="isSecondFormVisible">
+      <h2 class="form-title">Okolina biljke</h2>
+      <div class="form-part">
+        <mat-form-field appearance="fill">
+          <mat-label>Sunceva svetlost</mat-label>
+          <mat-select [(ngModel)]="env.sunlight" name="sunlight" required multiple>
+            <mat-option *ngFor="let sunlight of sunlights"
+                        [value]="getSunlightEnumValue(sunlight)">{{ sunlight }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Prostorija</mat-label>
+          <mat-select [(ngModel)]="env.room" name="room" required>
+            <mat-option *ngFor="let sunlight of rooms"
+                        [value]="tran.getTranslatedRoom(sunlight)">{{ sunlight }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Pozicija u prostoriji</mat-label>
+          <mat-select [(ngModel)]="env.position" name="position" required>
+            <mat-option *ngFor="let sunlight of positions"
+                        [value]="tran.getTranslatedPosition(sunlight)">{{ sunlight }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      <div class="button-container">
+        <button mat-raised-button type="submit" (click)="onSubmit()">Preporuci mi</button>
+      </div></div>
+    </form>
+
+  </div>
+</div>
