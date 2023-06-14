@@ -41,4 +41,5 @@ export class PlantService {
   allUser() {
     return this.http.get<Plant[]>(this.host + "/all/user/"+this.userService.getLogged())
   }
+
 }

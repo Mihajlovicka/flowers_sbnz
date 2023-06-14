@@ -1,0 +1,57 @@
+<div class="centered-container">
+  <div class="login-form">
+
+
+    <form *ngIf="isFirstFormVisible">
+
+      <h2 class="form-title">Izaberi simptome biljke</h2>
+      <div class="form-part">
+        <mat-form-field appearance="fill">
+          <mat-label>Simptomi</mat-label>
+          <mat-select [(ngModel)]="choosenSymptoms" name="symptoms" required multiple>
+            <mat-option *ngFor="let s of symptoms"
+                        [value]="s">{{ s }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="button-container">
+          <button mat-raised-button type="submit" (click)="diagnose()">Dijagnostikuj</button>
+        </div>
+      </div>
+    </form>
+
+    <div *ngIf="isSecondFormVisible">
+
+      <h2 class="form-title">Bolesti koje smo nasli</h2>
+      <div class="form-part">
+        <div *ngFor="let group of groups">
+          <p><strong>Bolest {{group.disease.disease}}</strong></p>
+          <p>Odgovarajuci simptomi</p>
+          <ul>
+            <li *ngFor="let s of group.symptoms">{{ s.symptom }}</li>
+          </ul>
+        </div>
+        <div class="button-container">
+          <button mat-raised-button type="submit" (click)="showThirdForm()">Nasa dijagnoza</button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isThirdFormVisible">
+
+      <h2 class="form-title">Nasa dijagnoza je {{topDisease.disease.disease}}</h2>
+      <div class="form-part">
+        <p><strong>Uzroci </strong></p>
+        <ul>
+          <li *ngFor="let s of topDisease.symptoms">{{ s.cause }}</li>
+        </ul>
+        <p><strong>Tretmani </strong></p>
+        <ul>
+          <li *ngFor="let s of topDisease.symptoms">{{ s.treatment }}</li>
+        </ul>
+      </div>
+      <!--        <div class="button-container">-->
+      <!--          <button mat-raised-button type="submit" (click)="diagnose()">Dijagnostikuj</button>-->
+      <!--        </div>-->
+    </div>
+  </div>
+</div>

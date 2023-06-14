@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @Entity(name = "user")
 public class User {
-    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id@GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     private String surname;

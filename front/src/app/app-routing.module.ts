@@ -9,6 +9,7 @@ import {FlowersComponent} from "./flowers/flowers.component";
 import {FlowerComponent} from "./flower/flower.component";
 import {RecommendFormComponent} from "./recommend-form/recommend-form.component";
 import {RecommendationsComponent} from "./recommendations/recommendations.component";
+import {DiagnoseDiseaseComponent} from "./diagnose-disease/diagnose-disease.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -20,6 +21,7 @@ const routes: Routes = [
   {path:'flower', component: FlowerComponent},
   {path:'recommend-form', component: RecommendFormComponent},
   {path:'recommendations', component: RecommendationsComponent},
+  {path:'diagnose', component: DiagnoseDiseaseComponent},
 ];
 
 @NgModule({

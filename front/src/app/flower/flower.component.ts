@@ -6,6 +6,7 @@ import {
 } from '../model/enums';
 import {PlantRec, recomTranslations} from "../model/recommend-form";
 import {PlantService} from "../service/plant.service";
+import {DiseaseService} from "../service/disease.service";
 
 
 @Component({
@@ -20,7 +21,7 @@ export class FlowerComponent {
   rec: PlantRec | undefined;
 
   constructor(private route: ActivatedRoute, private service: PlantService,
-              private router: Router) {
+              private router: Router, private serviceDisease: DiseaseService) {
     if (history.state.plant !== undefined)
       this.plant = history.state.plant
     if (history.state.rec !== undefined) {
@@ -37,5 +38,9 @@ export class FlowerComponent {
         this.router.navigate(['/profile']);
       }else alert("Imate vec ovu biljku.")
     })
+  }
+
+  diagnose() {
+    this.router.navigate(['/diagnose'], { state: { plant: this.plant } });
   }
 }
