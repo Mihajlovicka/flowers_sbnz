@@ -11,6 +11,7 @@ import {RecommendFormComponent} from "./recommend-form/recommend-form.component"
 import {RecommendationsComponent} from "./recommendations/recommendations.component";
 import {DiagnoseDiseaseComponent} from "./diagnose-disease/diagnose-disease.component";
 import {StatisticComponent} from "./statistic/statistic.component";
+import {ProfileDataComponent} from "./profile-data/profile-data.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -18,6 +19,7 @@ const routes: Routes = [
   {path:'register', component: RegisterComponent},
   {path:'new-flower', component: NewFlowerComponent},
   {path:'profile', component: ProfileComponent},
+  {path:'profile-data', component: ProfileDataComponent},
   {path:'flowers', component: FlowersComponent},
   {path:'flower', component: FlowerComponent},
   {path:'recommend-form', component: RecommendFormComponent},

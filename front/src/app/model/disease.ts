@@ -2,6 +2,7 @@
 export class BackwardGroupedDiseases{
   disease:Disease = new Disease();
   symptoms:Symptom[] = []
+  max:boolean=false
 }
 
 export class Disease{

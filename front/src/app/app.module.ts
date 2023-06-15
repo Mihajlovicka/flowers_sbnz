@@ -32,6 +32,7 @@ import { DiagnoseDiseaseComponent } from './diagnose-disease/diagnose-disease.co
 import {DiseaseService} from "./service/disease.service";
 import { StatisticComponent } from './statistic/statistic.component';
 import {StatisticService} from "./service/statistic.service";
+import { ProfileDataComponent } from './profile-data/profile-data.component';
 
 
 @NgModule({
@@ -39,7 +40,7 @@ import {StatisticService} from "./service/statistic.service";
     AppComponent,
     HeaderComponent,
     LoginComponent,
-    HomeComponent,RegisterComponent, NewFlowerComponent, ProfileComponent, FlowersComponent, FlowerComponent, RecommendFormComponent, RecommendationsComponent, DiagnoseDiseaseComponent, StatisticComponent
+    HomeComponent,RegisterComponent, NewFlowerComponent, ProfileComponent, FlowersComponent, FlowerComponent, RecommendFormComponent, RecommendationsComponent, DiagnoseDiseaseComponent, StatisticComponent, ProfileDataComponent
   ],
   imports: [
     HttpClientModule,

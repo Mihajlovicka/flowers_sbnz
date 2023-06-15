@@ -13,9 +13,7 @@ import com.ftn.sbnz.model.drools.UserLevelInsert;
 import com.ftn.sbnz.model.drools.UserPlant;
 import com.ftn.sbnz.model.enums.*;
 import com.ftn.sbnz.model.plant.*;
-import com.ftn.sbnz.model.user.EnvironmentPreferences;
-import com.ftn.sbnz.model.user.LookPreferences;
-import com.ftn.sbnz.model.user.PlantCareUserForm;
+import com.ftn.sbnz.model.user.*;
 import com.ftn.sbnz.util.DebugAgendaEventListener;
 import org.junit.Test;
 import org.kie.api.KieServices;
@@ -24,10 +22,9 @@ import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.QueryResults;
 import org.kie.api.runtime.rule.QueryResultsRow;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 public class RulesTest {
@@ -272,14 +269,15 @@ public class RulesTest {
         ksession.insert(s9);
         ksession.insert(s10);
 
-//        HashMap<String, ArrayList<Disease>> symptomsPaths = new HashMap<>();
-//        ksession.setGlobal("symptomsPaths", symptomsPaths);
-//        ksession.insert(symptomsPaths);
+        HashMap<String, ArrayList<Disease>> symptomsPaths = new HashMap<>();
+        ksession.setGlobal("symptomsPaths", symptomsPaths);
+        ksession.insert(symptomsPaths);
 
-//        ksession.insert("zutiranje mladog lisca");
-//        ksession.insert("zutiranje lisca sa mrljama");
-//        ksession.insert("tamne mrlje i trulez na liscu");
+        ksession.insert("zutiranje mladog lisca");
+        ksession.insert("zutiranje lisca sa mrljama");
+        ksession.insert("tamne mrlje i trulez na liscu");
         ksession.insert("Vodenaste mrlje na liscu");
+        ksession.insert("Pojava sitnih crvenih tackica na liscu");
 
         BackwardGroupedDiseases group = new BackwardGroupedDiseases(glavnaDisease);
         BackwardGroupedDiseases group1 = new BackwardGroupedDiseases(glavnaDisease1);
@@ -294,4 +292,42 @@ public class RulesTest {
     }
 
 
-}
+    @Test
+    public void l() throws ParseException {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.newKieClasspathContainer();
+        KieSession ksession = kc.newKieSession("userLevel");
+//
+        User u = new User();
+        PlantCareUserForm form = new PlantCareUserForm();
+        form.setUserLevel(UserLevel.BEGINNER);
+
+        u.setPlantCareUserForm(form);
+
+        PositiveReview positiveReview = new PositiveReview("hhh");
+
+
+        SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
+        String dateS ="2023-06-10";
+        Date date1 = formatter1.parse(dateS);
+
+        NegativeReview negativeReview = new NegativeReview(new Symptom("eifheron", "tbbt","ehro"));
+//        negativeReview.setDate(date1);
+
+        Statistic s = new Statistic();
+        s.addPositive(positiveReview);
+        s.setUser(u);
+
+        ksession.insert(negativeReview);
+        ksession.insert(positiveReview);
+        ksession.insert(u);
+        ksession.insert(s);
+
+
+        long ruleFireCount = 0;
+        ruleFireCount = ksession.fireAllRules();
+        System.out.println("---" + ruleFireCount);
+
+    }
+
+    }

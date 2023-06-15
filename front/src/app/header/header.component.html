@@ -9,7 +9,10 @@
   <mat-menu #menu="matMenu">
     <button mat-menu-item routerLink="/new-flower">Dodaj cvet</button>
     <button mat-menu-item (click)="login()" *ngIf="service.getLogged() == null">Prijava</button>
-    <button mat-menu-item (click)="logout()" *ngIf="service.getLogged() != null">Odjava</button>
     <button mat-menu-item (click)="register()" *ngIf="service.getLogged() == null">Registracija</button>
+    <button mat-menu-item *ngIf="service.getLogged()" (click)="myFlower()"  >Moje cvece</button>
+    <button mat-menu-item *ngIf="service.getLogged()"  (click)="myData()">Moj profil</button>
+
+    <button mat-menu-item (click)="logout()" *ngIf="service.getLogged() != null">Odjava</button>
   </mat-menu>
 </mat-toolbar>

@@ -11,30 +11,37 @@ export class UserService {
   constructor(private http: HttpClient) {
   }
 
-  register(user: User){
+  register(user: User) {
     return this.http.post(this.host + "/register", user)
   }
 
-  login(email:string, password:string){
-    return this.http.post(this.host + "/login", {email:email, password:password}).pipe(
+  getUser() {
+    return this.http.get<User>(this.host + "/get/" + this.getLogged()).pipe(catchError((error) => {
+      alert(error.error);
+      throw error;
+    }))
+  }
+
+  login(email: string, password: string) {
+    return this.http.post(this.host + "/login", {email: email, password: password}).pipe(
       catchError((error) => {
         alert(error.error);
         throw error;
       }),
       map((response: any) => {
-        localStorage.setItem("user",response.email)
+        localStorage.setItem("user", response.email)
         return response;
       })
     )
   }
 
-  getLogged(){
-    if(localStorage.getItem("user") !== undefined && localStorage.getItem("user") !== '')
+  getLogged() {
+    if (localStorage.getItem("user") !== undefined && localStorage.getItem("user") !== '')
       return localStorage.getItem("user")
     return null;
   }
 
-  logOut(){
+  logOut() {
     localStorage.removeItem("user")
   }
 }

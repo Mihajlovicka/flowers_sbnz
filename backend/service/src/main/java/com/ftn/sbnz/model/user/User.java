@@ -1,5 +1,6 @@
 package com.ftn.sbnz.model.user;
 
+import com.ftn.sbnz.model.enums.UserLevel;
 import com.ftn.sbnz.model.plant.Plant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +30,6 @@ public class User {
     public void addPlant(Plant p){
         this.plants.add(p);
     }
+
 
 }

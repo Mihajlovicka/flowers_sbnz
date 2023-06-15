@@ -9,6 +9,9 @@ import com.ftn.sbnz.model.user.User;
 import com.ftn.sbnz.repository.NegativeReviewRepository;
 import com.ftn.sbnz.repository.PositiveReviewRepository;
 import com.ftn.sbnz.repository.StatisticRepository;
+import com.ftn.sbnz.util.DebugAgendaEventListener;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
+import java.util.List;
 
 @Service
 public class StatisticService {
@@ -28,6 +31,28 @@ public class StatisticService {
     @Autowired PlantService plantService;
     @Autowired DiseaseService diseaseService;
 
+
+    @Autowired
+    private KieContainer kieContainer;
+
+    public User changeLevel(String email){
+        KieSession kieSession = kieContainer.newKieSession("userLevel");
+        kieSession.addEventListener(new DebugAgendaEventListener());
+        User user = userService.getByEmail(email);
+        if(user == null)throw new RuntimeException("Korisnik nije pronadjen.");
+        kieSession.insert(user);
+        List<Statistic> s = statisticRepository.findByUser(user);
+        s.forEach(ss  -> {
+            kieSession.insert(ss);
+            ss.getPositive().forEach(kieSession::insert);
+            ss.getNegative().forEach(kieSession::insert);
+        });
+        kieSession.fireAllRules();
+        kieSession.dispose();
+        userService.update(user);
+        return user;
+    }
+
     public Statistic addNewStatistic(Long plantId, String email){
         Plant plant = plantService.getPlant(plantId);
         User user = userService.getByEmail(email);
@@ -37,6 +62,7 @@ public class StatisticService {
         statisticRepository.save(s);
         return s;
     }
+
 
     public Statistic getStatistic(Long plantId, String email){
         Plant plant = plantService.getPlant(plantId);

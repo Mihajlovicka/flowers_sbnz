@@ -54,4 +54,8 @@ export class StatisticService {
     }
     return this.http.post(this.host + "/negative/handle",o)
   }
+
+  checkUserLevel(email: string) {
+    return this.http.get<User>(this.host + "/level/" + email)
+  }
 }

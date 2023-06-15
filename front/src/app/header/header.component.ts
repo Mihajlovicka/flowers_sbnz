@@ -39,4 +39,12 @@ export class HeaderComponent implements AfterViewInit {
   register(){
     this.router.navigate(['register']);
   }
+
+  myFlower() {
+    this.router.navigate(['profile']);
+  }
+
+  myData() {
+    this.router.navigate(['profile-data']);
+  }
 }

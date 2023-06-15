@@ -36,6 +36,9 @@ public class StatisticController {
     public ResponseEntity handle(@RequestBody StatisticDTO statisticDTO) throws ParseException {
         return new ResponseEntity(statisticService.handleNegative(statisticDTO.getId(), statisticDTO.getEmail(), statisticDTO.getComment(), statisticDTO.getDate()), HttpStatus.OK);
     }
-
+    @GetMapping("/level/{email}")
+    public ResponseEntity level(@PathVariable String email){
+        return new ResponseEntity(statisticService.changeLevel(email), HttpStatus.OK);
+    }
 
 }

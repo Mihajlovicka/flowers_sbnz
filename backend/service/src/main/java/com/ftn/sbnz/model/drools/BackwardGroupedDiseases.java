@@ -15,6 +15,8 @@ public class BackwardGroupedDiseases {
     private Disease disease;
     private ArrayList<Symptom> symptoms = new ArrayList<>();
 
+    private boolean max = false;
+
     public BackwardGroupedDiseases(Disease disease) {
         this.disease = disease;
     }

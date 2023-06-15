@@ -1,0 +1,13 @@
+<div class="centered-container">
+  <div class="login-form">
+
+    <h2 class="form-title">Tvoj trenutni nivo</h2>
+    <div class="form-part">
+      <p><strong>{{getTranslatedPlantLevel(user.plantCareUserForm.userLevel)}}</strong></p>
+    </div>
+    <div class="button-container">
+      <button mat-raised-button type="submit" (click)="checkLevel()">Provera nivoa</button>
+    </div>
+  </div>
+</div>
+

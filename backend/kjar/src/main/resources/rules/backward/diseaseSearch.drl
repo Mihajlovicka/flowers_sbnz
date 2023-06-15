@@ -16,9 +16,6 @@ query isDiseaseOf( Disease x, Disease y )
     ( SubDisease( x, z; ) and isDiseaseOf( z, y; ) )
 end
 
-
-
-//
 rule "Find possible diseases"
 salience 20
 when
@@ -34,28 +31,64 @@ then
     modify($m){setSymptoms(sym)}
     System.out.println($m);
 end
-//
-//rule "Find path of causes from symptom to top disease"
-//salience 20
-//when
+
+
+
+rule "Find max"
+salience 10
+when
 //    $symptomsPaths: HashMap(this != null) from symptomsPaths
-//    $m: BackwardGroupedDiseases($disease: disease)
-//    $symptomString: String()
-//    DiseaseSymptom($symptomString == symptom.getSymptom(), $d: disease)
-//    isDiseaseOf($d, $z;)
-//then
-//    System.out.println("symptom: " + $symptomString + " top bolest: " + $d);
-//    System.out.println("z values: " + $z);
-//    ArrayList<Disease> dis = new ArrayList();
-//    if(!$symptomsPaths.containsKey($symptomString)){
-//        dis.add($d);
-//        dis.add($z);
-//    }else{
-//        dis = (ArrayList<Disease>) $symptomsPaths.get($symptomString);
-//        dis.add($z);
-//    }
-//    modify($symptomsPaths){put($symptomString, dis)}
+    $maxSymptomCount: Number(intValue > 0) from accumulate(
+        BackwardGroupedDiseases($symptoms: symptoms),
+        max($symptoms.size())
+    )
+    $m: BackwardGroupedDiseases($symptoms: symptoms, $symptoms.size() == $maxSymptomCount)
+then
+   System.out.println("max: " + $maxSymptomCount);
+   System.out.println("group: " + $m);
+//   insert(new MaxD($m));
+   modify($m){setMax(true)}
+end
+
+//query goToTop( Disease x, Disease z)
+//    MaxD($top:max.getDisease())
+//    SubDisease(x, $top; )
+//    or
+//    ( SubDisease( x, z; ) and goToTop( z, $top; ) )
 //end
+
+
+
+declare MaxD
+    max:BackwardGroupedDiseases
+end
+
+query goToTop( Disease x,Disease z)
+    (SubDisease(x, z; ) and MaxD(max.getDisease() == z))
+    or
+    ( SubDisease( x, z; ) and goToTop( x, y; ) )
+end
+
+query collectSubDiseases(Disease x, List subDiseases)
+    SubDisease(x, subDisease; )
+    or
+    (SubDisease(x, z; ) and collectSubDiseases(z, subDiseases;))
+end
+
+
+rule "Find path"
+salience 0
+when
+    MaxD($m:max, $top:max.getDisease(), $symptoms:max.getSymptoms())
+    $symptomString: Symptom() from $symptoms
+    DiseaseSymptom($symptomString.getSymptom() == symptom.getSymptom(), $d: disease)
+//    goToTop($d, $z;)
+then
+//    System.out.println("symptom: " + $symptomString.getSymptom() + " z: " + $subDiseases );
+//    modify($symptomsPaths){put($symptomString, 0)}
+end
+
+
 
 //rule "Find top disease"
 //salience 10

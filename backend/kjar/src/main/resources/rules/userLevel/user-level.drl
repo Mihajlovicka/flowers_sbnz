@@ -1,0 +1,65 @@
+package userLevel;
+import  com.ftn.sbnz.model.enums.*;
+import  com.ftn.sbnz.model.plant.*;
+import  com.ftn.sbnz.model.user.*;
+import  com.ftn.sbnz.model.drools.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+//ako ima vise od 2 biljke
+//na svakih 5 pozitivnih comentara
+//ako im negativnih svi stariji od X data moraju da budu izleceni
+
+//ako ima vise od 2 biljke
+//ako ima manje od broj biljaka *2 poz komentara u X dana
+//ako im negativnih svi stariji od X data nisu izleceni
+
+rule "Go up"
+lock-on-active
+salience 30
+when
+    $u: User($form: plantCareUserForm)
+    $userStatistic: List(size > 0) from collect( Statistic(user.getEmail() == $u.getEmail()))
+    $positiveList: List(size >= 1) from collect(PositiveReview(date > Date.from(LocalDate.now().minusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant())))
+    $negativeList: List(size == 0) from collect(NegativeReview(date < Date.from(LocalDate.now().minusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                        handled == false))
+then
+    PlantCareUserForm f = (PlantCareUserForm)$form;
+    int i = f.getUserLevel().ordinal();
+    if (i < 3) {
+             i += 1;
+             UserLevel[] levels = UserLevel.values();
+             UserLevel newLevel = levels[i];
+             f.setUserLevel(newLevel);
+             System.out.println(newLevel);
+             modify($u) {
+                 setPlantCareUserForm(f)
+             }
+         }
+end
+
+rule "Go down"
+lock-on-active
+salience 30
+when
+    $u: User($form: plantCareUserForm, $plantsSize:plants.size())
+    $userStatistic: List(size > 0) from collect( Statistic(user.getEmail() == $u.getEmail()))
+    $positiveList: List(size < $plantsSize * 2) from collect(PositiveReview(date > Date.from(LocalDate.now().minusDays(10).atStartOfDay(ZoneId.systemDefault()).toInstant())))
+    $negativeList: List(size > 10) from collect(NegativeReview(date < Date.from(LocalDate.now().minusDays(10).atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                        handled == false))
+then
+    PlantCareUserForm f = (PlantCareUserForm)$form;
+    int i = f.getUserLevel().ordinal();
+    if (i > 0) {
+             i -= 1;
+             UserLevel[] levels = UserLevel.values();
+             UserLevel newLevel = levels[i];
+             f.setUserLevel(newLevel);
+             modify($u) {
+                 setPlantCareUserForm(f)
+             }
+         }
+end

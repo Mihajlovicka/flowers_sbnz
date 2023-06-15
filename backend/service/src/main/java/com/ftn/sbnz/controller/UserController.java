@@ -26,4 +26,9 @@ public class UserController {
         return new ResponseEntity( userService.login(login.getEmail(), login.getPassword()), HttpStatus.OK);
     }
 
+
+    @GetMapping("/get/{email}")
+    public ResponseEntity get(@PathVariable String email){
+        return new ResponseEntity( userService.getByEmail(email), HttpStatus.OK);
+    }
 }

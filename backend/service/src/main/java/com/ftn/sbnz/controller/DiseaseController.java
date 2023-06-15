@@ -37,6 +37,3 @@ public class DiseaseController {
 //koliko je koja bolest zastupljena kod koje biljke
 //glavni uzrok da stavim prvi koji je
 
-//npr dodao je neke simptome biljci
-//ocenio da je biljka super i da raste
-//uklonio simptome

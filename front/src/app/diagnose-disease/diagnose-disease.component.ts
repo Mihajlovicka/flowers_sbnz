@@ -41,12 +41,11 @@ export class DiagnoseDiseaseComponent implements OnInit{
       this.isSecondFormVisible = true;
       this.isThirdFormVisible = false;
       this.groups = res
-      var max = 0
+      console.log(res)
       this.topDisease = this.groups[0]
       for(let g of this.groups){
-        if(g.symptoms.length > max)
+        if(g.max)
         {
-          max = g.symptoms.length
           this.topDisease = g
         }
       }
