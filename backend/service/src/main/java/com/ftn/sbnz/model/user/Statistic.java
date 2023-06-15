@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,14 +23,19 @@ public class Statistic {
     @ManyToOne
     private User user;
     @OneToMany
-    private ArrayList<PositiveReview> positive = new ArrayList<>();
+    private List<PositiveReview> positive = new ArrayList<>();
     @OneToMany
-    private ArrayList<NegativeReview> negative = new ArrayList<>();
+    private List<NegativeReview> negative = new ArrayList<>();
 
     public void addPositive(PositiveReview positiveReview){
         this.positive.add(positiveReview);
     }
     public void addNegative(NegativeReview positiveReview){
         this.negative.add(positiveReview);
+    }
+
+    public Statistic(Plant plant, User user) {
+        this.plant = plant;
+        this.user = user;
     }
 }

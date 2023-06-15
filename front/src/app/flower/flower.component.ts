@@ -7,6 +7,8 @@ import {
 import {PlantRec, recomTranslations} from "../model/recommend-form";
 import {PlantService} from "../service/plant.service";
 import {DiseaseService} from "../service/disease.service";
+import {User} from "../model/user";
+import {UserService} from "../service/user.service";
 
 
 @Component({
@@ -19,9 +21,11 @@ export class FlowerComponent {
   rectrans = recomTranslations;
   plant: Plant = new Plant();
   rec: PlantRec | undefined;
+  user:string | null= ''
 
   constructor(private route: ActivatedRoute, private service: PlantService,
-              private router: Router, private serviceDisease: DiseaseService) {
+              private router: Router, private serviceDisease: DiseaseService,
+              private usrService: UserService) {
     if (history.state.plant !== undefined)
       this.plant = history.state.plant
     if (history.state.rec !== undefined) {
@@ -29,6 +33,7 @@ export class FlowerComponent {
       if (this.rec?.plant)
         this.plant = this.rec?.plant
     }
+    this.user = usrService.getLogged()
   }
 
   choose() {
@@ -42,5 +47,9 @@ export class FlowerComponent {
 
   diagnose() {
     this.router.navigate(['/diagnose'], { state: { plant: this.plant } });
+  }
+
+  statistic() {
+    this.router.navigate(['/statistic'], { state: { plant: this.plant } });
   }
 }

@@ -12,6 +12,7 @@ import {
 } from "./enums";
 
 export class Plant {
+  id:number|undefined
   name: string= '';
   score: number= 0.0;
   plantLevel:PlantLevel |undefined;

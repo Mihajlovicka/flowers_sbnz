@@ -17,6 +17,10 @@ public class PositiveReview {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    private Date date;
+    private Date date = new Date();
     private String comment;
+
+    public PositiveReview(String comment) {
+        this.comment = comment;
+    }
 }

@@ -37,6 +37,10 @@ public class DiseaseService {
 
     @Autowired
     private KieContainer kieContainer;
+
+    public Symptom getSymptom(String symptom){
+        return symptomRepository.findSymptomBySymptom(symptom).orElseThrow(() -> new RuntimeException("Simptom ne postoji."));
+    }
     
     public void saveDisease(){
         Disease glavnaDisease = new Disease("zutiranje lisca");

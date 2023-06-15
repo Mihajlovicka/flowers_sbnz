@@ -1,1 +1,72 @@
-<p>statistic works!</p>
+<div class="container">
+  <div class="left">
+    <mat-tab-group class="tab-group">
+      <!-- Plant Details Tab -->
+      <mat-tab label="Tvoja statistika">
+        <div *ngIf="!noStatistic" class="left-container">
+          <h2>Pozitivni komentari</h2>
+          <div *ngFor="let c of statistic.positive">
+            <p>Komentar:<strong>{{ c.comment }} </strong> Datum: {{c.date}}</p>
+          </div>
+          <h2>Negativni komentari</h2>
+          <p><strong>Izleceni simptomi</strong></p>
+          <div *ngFor="let c of statistic.negative">
+            <p *ngIf="c.handled">Simptom :<strong>{{ c.symptom.symptom }} </strong> primecen dana: {{c.date}}</p>
+          </div>
+          <p><strong>Ne izleceni simptomi</strong></p>
+          <div *ngFor="let c of statistic.negative">
+            <p *ngIf="!c.handled">Simptom :<strong>{{ c.symptom.symptom }} </strong> primecen dana: {{c.date}}</p>
+          </div>
+        </div>
+
+        <div *ngIf="noStatistic" class="left-container">
+          <h2>Nema statistike</h2>
+        </div>
+      </mat-tab>
+
+      <!-- Description Tab -->
+      <mat-tab label="Dodaj komentar">
+        <div class="left-container">
+          <h2>Nov pozitivan komentar</h2>
+          <mat-form-field appearance="fill">
+            <mat-label>Komentar</mat-label>
+            <input matInput type="text" [(ngModel)]="positiveComment" name="positiveComment">
+          </mat-form-field>
+          <button mat-raised-button (click)="addPositive()">Dodaj</button>
+          <h2>Dodaj primecen simptom</h2>
+          <mat-form-field appearance="fill">
+            <mat-label>Simptom</mat-label>
+            <mat-select [(ngModel)]="chosenSymptom" name="chosenSymptoms" required>
+              <mat-option *ngFor="let s of symptoms" [value]="s">{{ s }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-raised-button (click)="addNegative()">Dodaj</button>
+          <h2>Simptom izlecen</h2>
+          <mat-form-field appearance="fill">
+            <mat-label>Simptom</mat-label>
+            <mat-select [(ngModel)]="existingSymptom" name="chosenSymptoms" required>
+              <mat-option *ngFor="let s of existingSymptoms" [value]="s">{{ s.symptom.symptom }} {{s.date}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-raised-button (click)="handleNegative()">Obrisi</button>
+
+
+        </div>
+      </mat-tab>
+      <div class="button-container">
+      </div>
+
+    </mat-tab-group>
+
+
+  </div>
+
+  <div class="right-container">
+    <img [src]="plant.description.picture" alt="Slika biljke">
+  </div>
+
+
+</div>
+
+
+

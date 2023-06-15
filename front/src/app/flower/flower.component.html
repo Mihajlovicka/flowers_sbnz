@@ -1,82 +1,83 @@
 <div class="container">
   <div class="left">
-  <mat-tab-group class="tab-group">
-    <!-- Plant Details Tab -->
-    <mat-tab label="Detalji biljke">
-      <div class="left-container">
-        <h2>{{ plant.name }}</h2>
-        <p><strong>Ocena:</strong> {{ plant.score }}</p>
-        <p *ngIf="plant.plantLevel !==undefined"><strong>Nivo tezine odrzavanja biljke:</strong> {{ trans.getTranslatedPlantLevel(plant.plantLevel) }}</p>
-        <p><strong>Nivo nege:</strong> {{ trans.getTranslatedCareLevel(plant.careLevel) }}</p>
-        <p><strong>Sunčeva svetlost:</strong></p>
-        <ul>
-          <li *ngFor="let color of plant.environment.sunlight">{{ trans.getTranslatedSunlight(color) }}</li>
-        </ul>
-        <p><strong>Vlažnost:</strong> {{ plant.environment.humidity }}</p>
-        <p><strong>Osetljivost na cirkulaciju vazduha:</strong>
-          {{ plant.environment.airCirculationSensitivity ? 'Osetljiv' : 'Nije osetljiv' }}</p>
-        <p><strong>Maksimalna temperatura:</strong> {{ plant.environment.temperatureMax }}</p>
-        <p><strong>Minimalna temperatura:</strong> {{ plant.environment.temperatureMin }}</p>
-        <p><strong>Potrebna površina:</strong> {{ trans.getTranslatedSpaceNeed(plant.environment.spaceNeed) }}</p>
-        <p><strong>Traženi hranjivi sastojci:</strong></p>
-        <ul>
-          <li *ngFor="let color of plant.environment.nutrientType">{{ trans.getTranslatedNutrientType(color) }}</li>
-        </ul>
-      </div>
-    </mat-tab>
+    <mat-tab-group class="tab-group">
+      <!-- Plant Details Tab -->
+      <mat-tab label="Detalji biljke">
+        <div class="left-container">
+          <h2>{{ plant.name }}</h2>
+          <p><strong>Ocena:</strong> {{ plant.score }}</p>
+          <p *ngIf="plant.plantLevel !==undefined"><strong>Nivo tezine odrzavanja biljke:</strong> {{ trans.getTranslatedPlantLevel(plant.plantLevel) }}</p>
+          <p><strong>Nivo nege:</strong> {{ trans.getTranslatedCareLevel(plant.careLevel) }}</p>
+          <p><strong>Sunčeva svetlost:</strong></p>
+          <ul>
+            <li *ngFor="let color of plant.environment.sunlight">{{ trans.getTranslatedSunlight(color) }}</li>
+          </ul>
+          <p><strong>Vlažnost:</strong> {{ plant.environment.humidity }}</p>
+          <p><strong>Osetljivost na cirkulaciju vazduha:</strong>
+            {{ plant.environment.airCirculationSensitivity ? 'Osetljiv' : 'Nije osetljiv' }}</p>
+          <p><strong>Maksimalna temperatura:</strong> {{ plant.environment.temperatureMax }}</p>
+          <p><strong>Minimalna temperatura:</strong> {{ plant.environment.temperatureMin }}</p>
+          <p><strong>Potrebna površina:</strong> {{ trans.getTranslatedSpaceNeed(plant.environment.spaceNeed) }}</p>
+          <p><strong>Traženi hranjivi sastojci:</strong></p>
+          <ul>
+            <li *ngFor="let color of plant.environment.nutrientType">{{ trans.getTranslatedNutrientType(color) }}</li>
+          </ul>
+        </div>
+      </mat-tab>
 
-    <!-- Description Tab -->
-    <mat-tab label="Opis">
-      <div class="left-container">
-        <p><strong>Boje:</strong> {{ plant.description.color.join(', ') }}</p>
-        <p><strong>Prosečne dimenzije:</strong> Širina: {{ plant.description.averagesSize.widthMin }}
-          - {{ plant.description.averagesSize.widthMax }} cm, Visina: {{ plant.description.averagesSize.heightMin }}
-          - {{ plant.description.averagesSize.heightMax }} cm</p>
-        <p><strong>Tip biljke:</strong> {{ trans.getTranslatedPlantType(plant.description.plantType) }}</p>
-        <p><strong>Cvetanje:</strong> {{ plant.description.flower.hasFlowers ? 'Ima cvetove' : 'Nema cvetove' }}</p>
-        <p><strong>Sezone cvetanja:</strong></p>
-        <ul>
-          <li *ngFor="let color of plant.description.flower.floweringSeason">{{ trans.getTranslatedSeason(color) }}</li>
-        </ul>
-        <p><strong>Sezone:</strong></p>
-        <ul>
-          <li *ngFor="let color of plant.description.seasons">{{ trans.getTranslatedSeason(color) }}</li>
-        </ul>
-      </div>
-    </mat-tab>
+      <!-- Description Tab -->
+      <mat-tab label="Opis">
+        <div class="left-container">
+          <p><strong>Boje:</strong> {{ plant.description.color.join(', ') }}</p>
+          <p><strong>Prosečne dimenzije:</strong> Širina: {{ plant.description.averagesSize.widthMin }}
+            - {{ plant.description.averagesSize.widthMax }} cm, Visina: {{ plant.description.averagesSize.heightMin }}
+            - {{ plant.description.averagesSize.heightMax }} cm</p>
+          <p><strong>Tip biljke:</strong> {{ trans.getTranslatedPlantType(plant.description.plantType) }}</p>
+          <p><strong>Cvetanje:</strong> {{ plant.description.flower.hasFlowers ? 'Ima cvetove' : 'Nema cvetove' }}</p>
+          <p><strong>Sezone cvetanja:</strong></p>
+          <ul>
+            <li *ngFor="let color of plant.description.flower.floweringSeason">{{ trans.getTranslatedSeason(color) }}</li>
+          </ul>
+          <p><strong>Sezone:</strong></p>
+          <ul>
+            <li *ngFor="let color of plant.description.seasons">{{ trans.getTranslatedSeason(color) }}</li>
+          </ul>
+        </div>
+      </mat-tab>
 
-    <!-- Maintenance Tab -->
-    <mat-tab label="Održavanje">
-      <div class="left-container">
-        <p><strong>Učestalost zalivanja:</strong> {{ plant.maintenance.wateringFrequency }}</p>
-        <p><strong>Količina zalivanja:</strong> {{ plant.maintenance.wateringAmount }}</p>
-        <p><strong>Potrebe za zalivanjem:</strong> {{ trans.getTranslatedWateringNeeds(plant.maintenance.wateringNeeds) }}</p>
-        <p><strong>Orezivanje:</strong> {{ plant.maintenance.pruning }}</p>
-        <p><strong>Prihrana:</strong> {{ plant.maintenance.fertilization }}</p>
-        <p><strong>Presađivanje biljke:</strong> {{ plant.maintenance.plantTransplant }}</p>
-        <p><strong>Potrebe za održavanjem:</strong> {{ trans.getTranslatedMaintenanceNeeds(plant.maintenance.maintenanceNeeds) }}</p>
-        <p><strong>Otpornost biljke:</strong> {{ trans.getTranslatedPlantResistanceLevel(plant.maintenance.resistant) }}</p>
-      </div>
-    </mat-tab>
+      <!-- Maintenance Tab -->
+      <mat-tab label="Održavanje">
+        <div class="left-container">
+          <p><strong>Učestalost zalivanja:</strong> {{ plant.maintenance.wateringFrequency }}</p>
+          <p><strong>Količina zalivanja:</strong> {{ plant.maintenance.wateringAmount }}</p>
+          <p><strong>Potrebe za zalivanjem:</strong> {{ trans.getTranslatedWateringNeeds(plant.maintenance.wateringNeeds) }}</p>
+          <p><strong>Orezivanje:</strong> {{ plant.maintenance.pruning }}</p>
+          <p><strong>Prihrana:</strong> {{ plant.maintenance.fertilization }}</p>
+          <p><strong>Presađivanje biljke:</strong> {{ plant.maintenance.plantTransplant }}</p>
+          <p><strong>Potrebe za održavanjem:</strong> {{ trans.getTranslatedMaintenanceNeeds(plant.maintenance.maintenanceNeeds) }}</p>
+          <p><strong>Otpornost biljke:</strong> {{ trans.getTranslatedPlantResistanceLevel(plant.maintenance.resistant) }}</p>
+        </div>
+      </mat-tab>
 
-    <!-- Maintenance Tab -->
-    <mat-tab label="Saveti" *ngIf="rec !== undefined">
-      <div class="left-container">
-        <p><strong>Ova biljka ti odgovara:</strong> {{ rec.points }}% </p>
-        <p><strong>Ova biljka odgovara tvojim biljkama:</strong> {{ rec.fit }}%</p>
-        <p><strong>Velicina saksije:</strong> {{ rec.potSize }}</p>
-        <p><strong>Vrsta saksije:</strong> </p>
-        <ul>
-          <li *ngFor="let color of rec.potTypes">{{ rectrans.getTranslatedPotFromEnum(color) }}</li>
-        </ul>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
+      <!-- Maintenance Tab -->
+      <mat-tab label="Saveti" *ngIf="rec !== undefined">
+        <div class="left-container">
+          <p><strong>Ova biljka ti odgovara:</strong> {{ rec.points }}% </p>
+          <p><strong>Ova biljka odgovara tvojim biljkama:</strong> {{ rec.fit }}%</p>
+          <p><strong>Velicina saksije:</strong> {{ rec.potSize }}</p>
+          <p><strong>Vrsta saksije:</strong> </p>
+          <ul>
+            <li *ngFor="let color of rec.potTypes">{{ rectrans.getTranslatedPotFromEnum(color) }}</li>
+          </ul>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
 
-  <div class="button-container">
-    <button mat-raised-button (click)="choose()">Dodaj ovu biljku</button>
-    <button mat-raised-button (click)="diagnose()">Dijagnostikuj</button>
-  </div>
+    <div class="button-container">
+      <button mat-raised-button (click)="choose()">Dodaj ovu biljku</button>
+      <button mat-raised-button (click)="diagnose()">Dijagnostikuj</button>
+      <button mat-raised-button *ngIf="user != null && user !== ''" (click)="statistic()">Statistika</button>
+    </div>
   </div>
 
   <div class="right-container">
@@ -85,5 +86,3 @@
 
 
 </div>
-
-

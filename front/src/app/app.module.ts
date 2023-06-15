@@ -31,6 +31,7 @@ import { RecommendationsComponent } from './recommendations/recommendations.comp
 import { DiagnoseDiseaseComponent } from './diagnose-disease/diagnose-disease.component';
 import {DiseaseService} from "./service/disease.service";
 import { StatisticComponent } from './statistic/statistic.component';
+import {StatisticService} from "./service/statistic.service";
 
 
 @NgModule({
@@ -57,7 +58,7 @@ import { StatisticComponent } from './statistic/statistic.component';
     MatCardModule,
     MatTabsModule
   ],
-  providers: [UserService, PlantService, DiseaseService],
+  providers: [UserService, PlantService, DiseaseService, StatisticService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

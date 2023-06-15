@@ -75,4 +75,8 @@ public class PlantService {
     public List<Plant> userPlants(String email) {
         return userService.getByEmail(email).getPlants();
     }
+
+    public Plant getPlant(Long plantId){
+        return plantRepository.findById(plantId).orElse(null);
+    }
 }

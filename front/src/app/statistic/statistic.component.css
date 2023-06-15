@@ -1,0 +1,60 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5%
+}
+
+.tab-group {
+  flex: 1;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.left-container {
+  background-color: transparent;
+  padding: 20px;
+  max-width: 50%;
+}
+
+.left{
+  flex: 1;
+  float: right;
+}
+
+.right-container {
+  flex: 1;
+
+}
+
+h2 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+p {
+  margin: 10px 0;
+}
+
+ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+li {
+  list-style-type: disc;
+}
+
+img {
+  width: auto;
+  max-height: 80vh;
+}
+.button-container {
+  justify-content: end;
+}
+
+.button-container button {
+  font-size: 16px;
+  padding: 10px 20px;
+}
